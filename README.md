@@ -1,3 +1,5 @@
 # Boggle
 
-//ICS4U
+**ICS4U ISP**
+
+**By: Kevin, Rohan, Mandana, Nicholas**
