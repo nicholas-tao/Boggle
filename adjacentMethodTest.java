@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class testMethod {
+public class adjacentMethodTest {
 	public static void main(String args[]) {
 		
 		String[][] input = {{"B", "A", "D", "E", "L"}, 
