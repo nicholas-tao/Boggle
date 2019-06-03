@@ -1,5 +1,14 @@
 import java.util.*;
 
+/*
+import statements for timer and media player
+
+import java.util.Timer;
+import java.util.TimerTask;
+import javafx.scene.media.Media
+import javafx.scene.media.MediaPlayer
+*/
+
 public class adjacentMethodTest {
 	public static void main(String args[]) {
 		
