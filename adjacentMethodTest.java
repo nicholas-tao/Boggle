@@ -9,23 +9,23 @@ import javafx.scene.media.Media
 import javafx.scene.media.MediaPlayer
 */
 
-public class adjacentMethodTest {
+public class testMethod {
 	public static void main(String args[]) {
 		
 		String[][] input = {{"B", "A", "D", "E", "L"}, 
 							{"Q", "D", "W", "P", "O"}, 
-							{"X", "I", "C", "N", "T"}, 
+							{"S", "F", "D", "N", "T"}, 
 							{"L", "O", "F", "A", "S"}, 
 							{"V", "H", "K", "S", "N"}};
 		
-		String word = "ADIOH";
+		String word = "SFS"; 
 		System.out.println(checkAdjacent(input, word));
 		
 	}
 		
 	public static boolean checkAdjacent(String input[][], String word) {
 		ArrayList<Integer> coordinates = new ArrayList<Integer>();
-		for (int i=0; i<input.length; i++) {
+		for (int i=0; i<input.length; i++) { //check ancestor
 			for (int j=0; j<input[i].length; j++) {
 				if (input[i][j].equals(Character.toString(word.charAt(0)))) {
 					System.out.println("Starting Coordinates:" + i + ", " +j);
@@ -49,7 +49,8 @@ public class adjacentMethodTest {
 	}
 	
 	public static boolean getAdjacent(String[][] input, String word, int[] startingCoordinates) {
-		int[] parentCoordinates = startingCoordinates;
+		boolean[][] visited = new boolean[5][5];
+		visited[startingCoordinates[0]][startingCoordinates[1]] = true;
 		int[] row = {-1, -1, -1, 0, 0, 1, 1, 1};
 		int[] column = {-1, 0, 1, -1, 1, -1, 0, 1}; 
 		boolean charFound = true;
@@ -70,13 +71,10 @@ public class adjacentMethodTest {
 					if (xPos < 0 || yPos < 0 || xPos >= input.length || yPos >= input.length) {
 						continue;
 					} else {
-						System.out.println(xPos + ", " + yPos);
-						String newPos = xPos + " " + yPos;
-						String parentPos = parentCoordinates[0] + " " + parentCoordinates[1];
-						if (input[xPos][yPos].equals(currentLetter) && (!newPos.equals(parentPos))) {
+						
+						if (input[xPos][yPos].equals(currentLetter) && visited[xPos][yPos] != true) {
+							visited[xPos][yPos] = true;
 							System.out.println(currentLetter);
-							parentCoordinates[0] = startingCoordinates[0];
-							parentCoordinates[1] = startingCoordinates[1];
 							startingCoordinates[0] = xPos;
 							startingCoordinates[1] = yPos;
 							charFound = true;
