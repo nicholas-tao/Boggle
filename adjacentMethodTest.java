@@ -74,7 +74,6 @@ public class testMethod {
 						
 						if (input[xPos][yPos].equals(currentLetter) && visited[xPos][yPos] != true) {
 							visited[xPos][yPos] = true;
-							System.out.println(currentLetter);
 							startingCoordinates[0] = xPos;
 							startingCoordinates[1] = yPos;
 							charFound = true;
