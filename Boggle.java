@@ -1,9 +1,12 @@
+//USE THIS FILE
+/*Broken things: checkAdjacent, timer to be implemented
+ */ 
 import java.util.*;
 import java.io.*;
 import javax.sound.sampled.*;
 import java.util.Random;
 public class Boggle {
-  static boolean found = true;
+  static boolean found = false;
   public static void main (String [] args) throws Exception{
     boolean gameRunning = true;
     Scanner readFile = new Scanner(new File("wordlist.txt"),"UTF-8");
@@ -280,8 +283,6 @@ public class Boggle {
     
     return true;
   }
-  
-  
   
   public static boolean checkAdjacent(String[][] board, String word) {
     for (int i=0; i<board.length; i++) {
