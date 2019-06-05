@@ -2,22 +2,25 @@ import java.util.*;
 import java.io.*;
 import javax.sound.sampled.*;
 import java.util.Random;
-public class Boggle {
+import java.util.Timer;
+import java.util.TimerTask;
+public class Boggle2 {
   static boolean found = false;
   public static void main (String [] args) throws Exception{
     boolean gameRunning = true;
     Scanner input = new Scanner("wordList.txt");
     Scanner sc = new Scanner(System.in);
     ArrayList<String> wordArrayList = new ArrayList<String>();
+    while(input.hasNext()){
+      wordArrayList.add(input.nextLine());
+    }
     
     String [] wordList = wordArrayList.toArray(new String [wordArrayList.size()]); //convert arraylist to arraY
     
     final int BOARD_SIZE = 5;
     String [] die = {"AAAFRS", "AAEEEE", "AAFIRS", "ADENNN", "AEEEEM", "AEEGMU", "AEGMNN", "AFIRSY", "BJKQXZ", "CCNSTW", "CEIILT", "CEILPT", "CEIPST", "DDLNOR", "DHHLOR", "DHHNOT", "DHLNOR", "EIIITT", "EMOTTT", "ENSSSU", "FIPRSY", "GORRVW", "HIPRRY", "NOOTUW", "OOOTTU"};
     int playerNumber, scoreLimit, minWordLen;
-    while(input.hasNext()){
-      wordArrayList.add(input.nextLine());
-    }
+    
     
     while(gameRunning){
       startMusic("sound.aiff");
@@ -43,7 +46,7 @@ public class Boggle {
             timesPassed = 0;
           }
           printBoard(board);
-          System.out.println("Would you like to:\n1. Pass\n 2.Continue\n3.Restart\4.Exit” [Enter the number]");
+          System.out.println("Would you like to:\n1. Pass\n2.Continue\n3.Restart\n4.Exit [Enter the number]");
           int passRestartExit = sc.nextInt();
           
           if (passRestartExit == 1) {
@@ -58,13 +61,16 @@ public class Boggle {
             gameRunning = false;
             //break from outer while loop
           }
+          String word;
           new Reminder (15);
           System.out.println("Timer started\nEnter 1 to pause");
-          while (timer < 15) {
+          while (new Reminder(15).remaining > 0) {
+           
             System.out.println("Enter any words you see");
-            String word = sc.nextLine();
+            sc.next();
+             word = sc.nextLine();
             if (word.equals("1")) {
-              //pause timer
+              new Reminder(15).pause();
               System.out.println("Click ENTER to resume");
               //resume timer
             }
@@ -73,7 +79,6 @@ public class Boggle {
               score+= word.length();
             }
           }
-          System.out.println("Times up!");
           
           if (score > scoreLimit) {
             System.out.println("User score: " +score +"\nCongratulations! You won!");
@@ -140,7 +145,7 @@ public class Boggle {
             new Reminder(15);
             System.out.println("Time has started");
             System.out.println("Enter 1 to pause");
-            while(timer < 15){ //NEEDS WORK
+            while(new Reminder(15).remaining > 0){ //NEEDS WORK
               System.out.println("Please enter the words: ");
               String word = sc.next();
               if(word.equals("1")){
@@ -166,11 +171,11 @@ public class Boggle {
             new Reminder(15);
             System.out.println("Time has started");
             System.out.println("Enter 1 to pause");
-            while(timer < 15){ //NEEDS WORK
+            while(new Reminder(15).remaining > 0){ //NEEDS WORK
               System.out.println("Please enter the words: ");
               String word = sc.next();
               if(word.equals("1")){
-                //pause timer
+                new Reminder(15).pause();
                 System.out.println("Resume game by clicking ENTER");
                 //resume timer
               }
