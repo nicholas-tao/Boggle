@@ -1,41 +1,28 @@
 import java.util.*;
 
 /*
-import statements for timer and media player
-
 import java.util.Timer;
 import java.util.TimerTask;
-import javafx.scene.media.Media
-import javafx.scene.media.MediaPlayer
 */
 import java.util.*;
-import java.io.File; 
-import java.io.IOException; 
-import java.util.Scanner; 
-  
-import javax.sound.sampled.AudioInputStream; 
-import javax.sound.sampled.AudioSystem; 
-import javax.sound.sampled.Clip; 
-import javax.sound.sampled.LineUnavailableException; 
-import javax.sound.sampled.UnsupportedAudioFileException; 
-
+import java.io.*;
+import javax.sound.sampled.*;
 
 public class recursiveGridSearch {
-	
-	
 	static boolean found = false;
+	static Scanner scanner = new Scanner(System.in);
 	
-	public static void main(String args[]) {
+	public static void main(String args[]) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+		startMusic("sound.aiff"); //only aiff and au files can be used
 		String[][] board = {{"B", "A", "D", "E", "L"}, 
-							{"Q", "D", "W", "P", "O"}, 
-							{"F", "I", "F", "N", "T"}, 
-							{"L", "O", "F", "A", "S"}, 
-							{"V", "H", "K", "S", "N"}};
+				    {"Q", "D", "W", "P", "O"}, 
+				    {"F", "I", "F", "N", "T"}, 
+				    {"L", "O", "F", "A", "S"}, 
+				    {"V", "H", "K", "S", "N"}};
 
 		String word = "ADEL";
-		
 		System.out.println(checkAdjacent(board, word));
-		
+		scanner.nextLine(); //for testing of music, create a pause in the code
 		
 	}
 	
@@ -82,19 +69,14 @@ public class recursiveGridSearch {
 	}
 	
 	public static void startMusic(String filepath) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
-		 
-        // create AudioInputStream object 
 		AudioInputStream audioInputStream;
 		audioInputStream = AudioSystem.getAudioInputStream(new File(filepath).getAbsoluteFile()); 
 				                
-        // create clip reference 
-        Clip clip = AudioSystem.getClip(); 
-          
-        // open audioInputStream to the clip 
-        clip.open(audioInputStream);
-          
-        clip.loop(Clip.LOOP_CONTINUOUSLY); 
-        clip.start();
+		Clip clip = AudioSystem.getClip(); 
+
+		clip.open(audioInputStream);
+		clip.loop(Clip.LOOP_CONTINUOUSLY); 
+		clip.start();
 	}
 	
 	public static boolean checkAdjacent(String[][] board, String word) {
