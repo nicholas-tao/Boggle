@@ -47,11 +47,52 @@ public class Boggle {
             wordsEntered.clear();
             timesPassed = 0;
           }
+          printBoard(board);
+          System.out.println("Would you like to:\n1. Pass\n 2.Continue\n3.Restart\4.Exit” [Enter the number]");
+          int passRestartExit = sc.nextInt();
           
+          if (passRestartExit == 1) {
+            timesPassed++;
+            continue; //go back to top of loop
+          }else if (passRestartExit == 2) {
+            System.out.println("Okay, get ready!");
+          }else if (passRestartExit == 3) {
+            //Continue from outer while loop
+          }else if (passRestartExit == 4 ) {
+            System.out.println("Thank you for playing”");
+            gameRunning = false;
+            //break from outer while loop
+          }
+          new Reminder (15);
+          System.out.println("Timer started\nEnter 1 to pause");
+          while (timer < 15) {
+            System.out.println("Enter any words you see");
+            String word = sc.nextLine();
+            if (word.equals("1")) {
+              //pause timer
+              System.out.println("Click ENTER to resume");
+              //resume timer
+            }
+            if(validate(word, minWordLen, wordList, wordsEntered)){
+              wordsEntered.add(word);
+              score+= word.length();
+            }
+          }
+          System.out.println("Times up!");
           
-        }
+          if (score > scoreLimit) {
+            System.out.println("User score: " +score +"\nCongratulations! You won!");
+            System.out.println("“Do you want to play again? [Enter ‘y’ for yes or ‘n’ for no]");
+            String continueGame = sc.nextLine();
+            if (continueGame.equals("n")) {
+              gameRunning = false;
+              System.out.println("Thank you for playing");
+            } else {
+              //conitnue from outer while loop
+            }
+          }
+        }   
       }
-      
     }
     
     
