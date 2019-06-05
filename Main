@@ -30,9 +30,7 @@ public class Boggle {
       }
       System.out.println("");
     }
-    
-    new Reminder(3);
-    System.out.println("Timer started: ");
+
   }
   
   public static void randomizeBoard (String [][] board, String [] die) {
