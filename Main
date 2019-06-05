@@ -11,7 +11,7 @@ public class Boggle {
     while(input.hasNext()){
       wordArrayList.add(input.nextLine());
     }
-    Object[] array = wordArrayList.toArray();
+    Object[] wordlist = wordArrayList.toArray();
     //Iterate and convert to desired type
     for(Object o : array) {
         String s = (String) o;
