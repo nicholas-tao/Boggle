@@ -7,20 +7,34 @@ import java.io.*;
 import javax.sound.sampled.*;
 
 public class recursiveGridSearch {
+	
+	
 	static boolean found = false;
 	static Scanner scanner = new Scanner(System.in);
+
 	
 	public static void main(String args[]) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
 		startMusic("sound.aiff"); //only aiff and au files can be used
 		String[][] board = {{"B", "A", "D", "E", "L"}, 
-				    {"Q", "D", "W", "P", "O"}, 
-				    {"F", "I", "F", "N", "T"}, 
-				    {"L", "O", "F", "A", "S"}, 
-				    {"V", "H", "K", "S", "N"}};
+							{"Q", "D", "W", "P", "O"}, 
+							{"F", "I", "F", "N", "T"}, 
+							{"L", "O", "F", "A", "S"}, 
+							{"V", "H", "K", "S", "N"}};
 
 		String word = "ADEL";
 		System.out.println(checkAdjacent(board, word));
+		
 		scanner.nextLine(); //for testing of music, create a pause in the code
+		
+		word = "WPO";
+		System.out.println(checkAdjacent(board, word));
+		
+		scanner.nextLine(); 
+		
+		word = "GHREIOGHO";
+		System.out.println(checkAdjacent(board, word));
+
+
 		
 	}
 	
@@ -32,6 +46,7 @@ public class recursiveGridSearch {
 		if (checkDict(wordlist, word, min, max) > -1 && checkLength(word, wordLen) && checkAdjacent(board, word) && checkDuplicateWord(wordsEntered, word)) {
 			return true;
 		}
+		
 		return false;
 	}
 	
@@ -53,6 +68,7 @@ public class recursiveGridSearch {
 		if (word.length()>=wordLen) {
 			return true;
 		}
+		
 		return false;
 	}
 	
@@ -65,14 +81,19 @@ public class recursiveGridSearch {
 	}
 	
 	public static void startMusic(String filepath) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+		 
+        // create AudioInputStream object 
 		AudioInputStream audioInputStream;
 		audioInputStream = AudioSystem.getAudioInputStream(new File(filepath).getAbsoluteFile()); 
 				                
-		Clip clip = AudioSystem.getClip(); 
-
-		clip.open(audioInputStream);
-		clip.loop(Clip.LOOP_CONTINUOUSLY); 
-		clip.start();
+        // create clip reference 
+        Clip clip = AudioSystem.getClip(); 
+          
+        // open audioInputStream to the clip 
+        clip.open(audioInputStream);
+          
+        clip.loop(Clip.LOOP_CONTINUOUSLY); 
+        clip.start();
 	}
 	
 	public static boolean checkAdjacent(String[][] board, String word) {
@@ -82,10 +103,15 @@ public class recursiveGridSearch {
 					gridSearch(board, i, j, -1, -1, word, 0, word.length()-1);
 				}
 				
-				if (found) return true;
+				if (found) {
+					found = false;
+					return true;
+				}
 			}
 		}
+		
 		return false;
+
 	}
 	
 	public static boolean indexValid(String[][] board, int row, int col, int prevRow, int prevCol) {
@@ -116,4 +142,5 @@ public class recursiveGridSearch {
 			}
 		}
 	}
+	
 }
