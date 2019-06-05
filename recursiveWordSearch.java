@@ -8,7 +8,6 @@ import java.util.TimerTask;
 import javafx.scene.media.Media
 import javafx.scene.media.MediaPlayer
 */
-
 import java.util.*;
 import java.io.File; 
 import java.io.IOException; 
@@ -20,7 +19,10 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException; 
 import javax.sound.sampled.UnsupportedAudioFileException; 
 
+
 public class recursiveGridSearch {
+	
+	
 	static boolean found = false;
 	
 	public static void main(String args[]) {
@@ -33,6 +35,8 @@ public class recursiveGridSearch {
 		String word = "ADEL";
 		
 		System.out.println(checkAdjacent(board, word));
+		
+		
 	}
 	
 	public static boolean validate(String word, int wordLen, String[] wordlist, ArrayList<String> wordsEntered, String[][] board) {
@@ -80,14 +84,14 @@ public class recursiveGridSearch {
 	public static void startMusic(String filepath) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
 		 
         // create AudioInputStream object 
-		AudioSystem audioInputStream =  
-                new AudioSystem.getAudioInputStream(new File(filepath).getAbsoluteFile()); 
-          
+		AudioInputStream audioInputStream;
+		audioInputStream = AudioSystem.getAudioInputStream(new File(filepath).getAbsoluteFile()); 
+				                
         // create clip reference 
         Clip clip = AudioSystem.getClip(); 
           
         // open audioInputStream to the clip 
-        clip.open(audioInputStream); 
+        clip.open(audioInputStream);
           
         clip.loop(Clip.LOOP_CONTINUOUSLY); 
         clip.start();
