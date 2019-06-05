@@ -2,36 +2,33 @@ import java.util.*;
 import java.io.*;
 import javax.sound.sampled.*;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 public class Boggle {
-  static Scanner sc = new Scanner(System.in);
-  
+  static boolean found = false;
   public static void main (String [] args) throws Exception{
     boolean gameRunning = true;
-    File words = new java.io.File("wordlist.txt");
-    Scanner input = new Scanner(words);
+    Scanner input = new Scanner("wordList.txt");
+    Scanner sc = new Scanner(System.in);
     ArrayList<String> wordArrayList = new ArrayList<String>();
-    while(input.hasNext()){
-      wordArrayList.add(input.nextLine());
-    }
-    Object[] wordlist = wordArrayList.toArray();
- 
-    //Iterate and convert to desired type
-    for(Object o : wordlist) {
-        String s = (String) o;
-    }
+    
+    String [] wordList = wordArrayList.toArray(new String [wordArrayList.size()]); //convert arraylist to arraY
     
     final int BOARD_SIZE = 5;
     String [] die = {"AAAFRS", "AAEEEE", "AAFIRS", "ADENNN", "AEEEEM", "AEEGMU", "AEGMNN", "AFIRSY", "BJKQXZ", "CCNSTW", "CEIILT", "CEILPT", "CEIPST", "DDLNOR", "DHHLOR", "DHHNOT", "DHLNOR", "EIIITT", "EMOTTT", "ENSSSU", "FIPRSY", "GORRVW", "HIPRRY", "NOOTUW", "OOOTTU"};
-    
+    int playerNumber, scoreLimit, minWordLen;
+    while(input.hasNext()){
+      wordArrayList.add(input.nextLine());
+    }
     
     while(gameRunning){
       startMusic("sound.aiff");
       System.out.println("Do you want to have 1 player or 2 players?");
-      int playerNumber = sc.nextInt();
+      playerNumber = sc.nextInt();
       System.out.println("Enter the score level you intend to play up to");
-      int scoreLimit = sc.nextInt();
+      scoreLimit = sc.nextInt();
       System.out.println("Enter the minimum word length you prefer");
-      int minWordLen = sc.nextInt();
+      minWordLen = sc.nextInt();
       
       if (playerNumber==1) {
         ArrayList<String> wordsEntered = new ArrayList<String>();
@@ -65,15 +62,15 @@ public class Boggle {
           }
           new Reminder (15);
           System.out.println("Timer started\nEnter 1 to pause");
-          while (timer < 15) {
+          while (new Reminder(15).remaining > 0) {
             System.out.println("Enter any words you see");
             String word = sc.nextLine();
             if (word.equals("1")) {
-              //pause timer
+              new Reminder(15).pause();
               System.out.println("Click ENTER to resume");
               //resume timer
             }
-            if(validate(word, minWordLen, wordlist, wordsEntered)){
+            if(validate(word, minWordLen, wordList, wordsEntered, board)){
               wordsEntered.add(word);
               score+= word.length();
             }
@@ -93,7 +90,7 @@ public class Boggle {
           }
         }
       }
-
+      
       if(playerNumber == 2)
       {
         System.out.println("Player 1, please enter your name:");
@@ -145,7 +142,7 @@ public class Boggle {
             new Reminder(15);
             System.out.println("Time has started");
             System.out.println("Enter 1 to pause");
-            while(timer < 15){ //NEEDS WORK
+            while(new Reminder(15).remaining > 0){ //NEEDS WORK
               System.out.println("Please enter the words: ");
               String word = sc.next();
               if(word.equals("1")){
@@ -153,7 +150,7 @@ public class Boggle {
                 System.out.println("Resume game by clicking ENTER");
                 //resume timer
               }
-              if(validate(word, minWordLen, wordsEnteredP1)) {
+              if(validate(word, minWordLen, wordList, wordsEnteredP1, board)) {
                 score1+=word.length();
                 wordsEnteredP1.add(word);
               }
@@ -171,15 +168,15 @@ public class Boggle {
             new Reminder(15);
             System.out.println("Time has started");
             System.out.println("Enter 1 to pause");
-            while(timer < 15){ //NEEDS WORK
+            while(new Reminder(15).remaining > 0){ //NEEDS WORK
               System.out.println("Please enter the words: ");
               String word = sc.next();
               if(word.equals("1")){
-                //pause timer
+                new Reminder(15).pause();
                 System.out.println("Resume game by clicking ENTER");
                 //resume timer
               }
-              if(validate(word, minWordLen, wordsEnteredP2)) {
+              if(validate(word, minWordLen, wordList, wordsEnteredP2, board)) {
                 score2+=word.length();
                 wordsEnteredP2.add(word);
               }
@@ -216,8 +213,6 @@ public class Boggle {
       }
     }
   }
-
-
   
   public static void randomizeBoard (String [][] board, String [] die) {
     ArrayList <Integer> ranNums = new ArrayList <Integer>(); 
@@ -238,7 +233,7 @@ public class Boggle {
     
   }
   
-   public static void printBoard (String [][] board) {
+  public static void printBoard (String [][] board) {
     for (int i = 0; i < board.length; i++) {
       for (int j = 0; j < board[i].length; j++) {
         System.out.print(board[i][j] +" ");
@@ -246,97 +241,102 @@ public class Boggle {
       System.out.println("");
     }
   }
-   
-   public static boolean validate(String word, int wordLen, String[] wordlist, ArrayList<String> wordsEntered, String[][] board) {
-  int min = 0;
-  int max = wordlist.length-1;
-  //int posistion  = checkDict(wordlist, word, min, max);
   
-  if (checkDict(wordlist, word, min, max) > -1 && checkLength(word, wordLen) && checkAdjacent(board, word) && checkDuplicateWord(wordsEntered, word)) {
-   return true;
+  public static boolean validate(String word, int wordLen, String[] wordList, ArrayList<String> wordsEntered, String[][] board) {
+    int min = 0;
+    int max = wordList.length-1;
+    
+    if (checkDict(wordList, word, min, max) > -1 && checkLength(word, wordLen) && checkAdjacent(board, word) && checkDuplicateWord(wordsEntered, word)) {
+      return true;
+    }
+    return false;
   }
-  return false;
- }
- 
-   public static int checkDict(String[] wordlist, String word, int min, int max) {
-     int middle = (max + min)/2;
-     
-     if (word.compareTo(wordlist[middle]) > 0) {
-       return checkDict(wordlist, word, middle+1, max);
-     } else if (word.compareTo(wordlist[middle]) < 0) {
-       return checkDict(wordlist, word, min, middle-1);
-     } else if (word.compareTo(wordlist[middle])==0) {
-       return middle;
-     }
-     
-     return -1;
-   }
-   
-   public static boolean checkLength(String word, int wordLen) {
-     if (word.length()>=wordLen) {
-       return true;
-     }
-     return false;
-   }
-   
-   public static boolean checkDuplicateWord(ArrayList<String> usedWords, String word) {
-     if (usedWords.contains(word)) {
-       return false;
-     }
-     
-     return true;
-   }
-   
-   public static void startMusic(String filepath) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
-     AudioInputStream audioInputStream;
-     audioInputStream = AudioSystem.getAudioInputStream(new File(filepath).getAbsoluteFile()); 
-     
-     Clip clip = AudioSystem.getClip(); 
-     
-     clip.open(audioInputStream);
-     clip.loop(Clip.LOOP_CONTINUOUSLY); 
-     clip.start();
-   }
-   
-   public static boolean checkAdjacent(String[][] board, String word) {
-     for (int i=0; i<board.length; i++) {
-       for (int j=0; j<board[i].length; j++) {
-         if (board[i][j].equals(Character.toString(word.charAt(0)))) {
-           gridSearch(board, i, j, -1, -1, word, 0, word.length()-1);
-         }
-         
-         if (found) return true;
-       }
-     }
-     return false;
-   }
-   
-   public static boolean indexValid(String[][] board, int row, int col, int prevRow, int prevCol) {
-     int len = board.length;
-     if ((row >= 0 && col >= 0 && row < len && col < len) && !(prevRow == row && prevCol == col)) {
-       return true;
-     } else {
-       return false;
-     }
-   }
-   
-   public static void gridSearch(String[][] board, int row, int col, int prevRow, int prevCol, String word, int index, int wordLen) {
-     int[] x = {-1, -1, -1, 0, 0, 1, 1, 1};
-     int[] y = {-1, 0, 1, -1, 1, -1, 0, 1};
-     
-     if (index > wordLen || !board[row][col].equals(Character.toString(word.charAt(index)))) {
-       return;
-     }
-     
-     if (index == wordLen) {
-       found = true;
-       return;
-     }
-     
-     for (int i=0; i<8; i++) {
-       if (indexValid(board, (row + x[i]), (col + y[i]), prevRow, prevCol)) {
-         gridSearch(board, row + x[i], col + y[i], row, col, word, index+1, wordLen);
-       }
-     }
-   }
-}
+  
+  public static int checkDict(String[] wordList, String word, int min, int max) {
+    int middle = (max + min)/2;
+    
+    if (word.compareTo(wordList[middle]) > 0) {
+      return checkDict(wordList, word, middle+1, max);
+    } else if (word.compareTo(wordList[middle]) < 0) {
+      return checkDict(wordList, word, min, middle-1);
+    } else if (word.compareTo(wordList[middle])==0) {
+      return middle;
+    }
+    return -1;
+  }
+  
+  public static boolean checkLength(String word, int wordLen) {
+    if (word.length()>=wordLen) {
+      return true;
+    }
+    return false;
+  }
+  
+  public static boolean checkDuplicateWord(ArrayList<String> usedWords, String word) {
+    if (usedWords.contains(word)) {
+      return false;
+    }
+    
+    return true;
+  }
+  
+  
+  
+  public static boolean checkAdjacent(String[][] board, String word) {
+    for (int i=0; i<board.length; i++) {
+      for (int j=0; j<board[i].length; j++) {
+        if (board[i][j].equals(Character.toString(word.charAt(0)))) {
+          gridSearch(board, i, j, -1, -1, word, 0, word.length()-1);
+        }
+        
+        if (found) {
+          found = false;
+          return true;
+        }
+      }
+    }
+    
+    return false;
+    
+  }
+  
+  public static boolean indexValid(String[][] board, int row, int col, int prevRow, int prevCol) {
+    int len = board.length;
+    if ((row >= 0 && col >= 0 && row < len && col < len) && !(prevRow == row && prevCol == col)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  
+  public static void gridSearch(String[][] board, int row, int col, int prevRow, int prevCol, String word, int index, int wordLen) {
+    int[] x = {-1, -1, -1, 0, 0, 1, 1, 1};
+    int[] y = {-1, 0, 1, -1, 1, -1, 0, 1};
+    
+    if (index > wordLen || !board[row][col].equals(Character.toString(word.charAt(index)))) {
+      return;
+    }
+    
+    if (index == wordLen) {
+      found = true;
+      return;
+    }
+    
+    for (int i=0; i<8; i++) {
+      if (indexValid(board, (row + x[i]), (col + y[i]), prevRow, prevCol)) {
+        gridSearch(board, row + x[i], col + y[i], row, col, word, index+1, wordLen);
+      }
+    }
+  }
+  
+  public static void startMusic(String filepath) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+    AudioInputStream audioInputStream;
+    audioInputStream = AudioSystem.getAudioInputStream(new File(filepath).getAbsoluteFile()); 
+    
+    Clip clip = AudioSystem.getClip(); 
+    
+    clip.open(audioInputStream);
+    clip.loop(Clip.LOOP_CONTINUOUSLY); 
+    clip.start();
+  }
+  }
