@@ -32,7 +32,6 @@ public class recursiveGridSearch {
 		if (checkDict(wordlist, word, min, max) > -1 && checkLength(word, wordLen) && checkAdjacent(board, word) && checkDuplicateWord(wordsEntered, word)) {
 			return true;
 		}
-		
 		return false;
 	}
 	
@@ -54,7 +53,6 @@ public class recursiveGridSearch {
 		if (word.length()>=wordLen) {
 			return true;
 		}
-		
 		return false;
 	}
 	
@@ -84,14 +82,10 @@ public class recursiveGridSearch {
 					gridSearch(board, i, j, -1, -1, word, 0, word.length()-1);
 				}
 				
-				if (found) {
-					return true;
-				}
+				if (found) return true;
 			}
 		}
-		
 		return false;
-
 	}
 	
 	public static boolean indexValid(String[][] board, int row, int col, int prevRow, int prevCol) {
@@ -122,5 +116,4 @@ public class recursiveGridSearch {
 			}
 		}
 	}
-	
 }
