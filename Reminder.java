@@ -3,7 +3,8 @@ import java.util.TimerTask;
 
 public class Reminder {
     Timer timer;
-    
+    int time;
+    int remaining = 15 - time;
     //Reminder constructor that takes in seconds
     public Reminder(int seconds) {
         timer = new Timer();
@@ -17,8 +18,26 @@ public class Reminder {
             timer.cancel(); //Terminate the timer thread
         }
     }
+    
+    public void pause() {
+      this.timer.cancel();
+    }
+    
+    
+    public void resume() {
+      this.timer = new Timer();
+      this.timer.schedule(new RemindTask(), 0, 1000 );
+    }
+    
+    public int remain(){
+      return remaining;
+    }
 
 }
+
+
+
+  
 
 
 
