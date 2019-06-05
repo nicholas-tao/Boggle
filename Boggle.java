@@ -9,16 +9,13 @@ public class Boggle {
     Scanner readFile = new Scanner(new File("wordlist.txt"),"UTF-8");
     Scanner sc = new Scanner(System.in);
     ArrayList<String> wordArrayList = new ArrayList<String>();
-    
-    
-    
     final int BOARD_SIZE = 5;
     String [] die = {"AAAFRS", "AAEEEE", "AAFIRS", "ADENNN", "AEEEEM", "AEEGMU", "AEGMNN", "AFIRSY", "BJKQXZ", "CCNSTW", "CEIILT", "CEILPT", "CEIPST", "DDLNOR", "DHHLOR", "DHHNOT", "DHLNOR", "EIIITT", "EMOTTT", "ENSSSU", "FIPRSY", "GORRVW", "HIPRRY", "NOOTUW", "OOOTTU"};
     int playerNumber, scoreLimit, minWordLen;
     while(readFile.hasNext()){
       wordArrayList.add(readFile.nextLine());
     }
-    String [] wordList = wordArrayList.toArray(new String [wordArrayList.size()]); //convert arraylist to arraY
+    String [] wordList = wordArrayList.toArray(new String [wordArrayList.size()]); //convert arraylist to array
     
     outerloop:
       while(gameRunning){
@@ -75,6 +72,8 @@ public class Boggle {
               wordsEntered.add(word);
               score+= word.length();
               System.out.println("Current score: " +score);
+            } else {
+              System.out.println("Not found");
             }
           }
           
