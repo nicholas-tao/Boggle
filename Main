@@ -1,0 +1,56 @@
+import java.util.*;
+import java.io.*;
+public class Boggle {
+  static Scanner myScanner = new Scanner(System.in);
+  
+  public static void main (String [] args) throws Exception{
+    boolean gameRunning = true;
+    File words = new java.io.File("wordlist.txt");
+    Scanner input = new Scanner(words);
+    ArrayList<String> wordArrayList = new ArrayList<String>();
+    while(input.hasNext()){
+      wordArrayList.add(input.nextLine());
+    }
+    Object[] array = wordArrayList.toArray();
+    //Iterate and convert to desired type
+    for(Object o : array) {
+        String s = (String) o;
+    }
+    
+    final int BOARD_SIZE = 5;
+    String board[][] = new String[BOARD_SIZE][BOARD_SIZE];
+    String [] die = {"AAAFRS", "AAEEEE", "AAFIRS", "ADENNN", "AEEEEM", "AEEGMU", "AEGMNN", "AFIRSY", "BJKQXZ", "CCNSTW", "CEIILT", "CEILPT", "CEIPST", "DDLNOR", "DHHLOR", "DHHNOT", "DHLNOR", "EIIITT", "EMOTTT", "ENSSSU", "FIPRSY", "GORRVW", "HIPRRY", "NOOTUW", "OOOTTU"};
+    
+    randomizeBoard(board, die);
+    
+    //print board
+    for (int i = 0; i < board.length; i++) {
+      for (int j = 0; j < board[i].length; j++) {
+        System.out.print(board[i][j] +" ");
+      }
+      System.out.println("");
+    }
+    
+    new Reminder(3);
+    System.out.println("Timer started: ");
+  }
+  
+  public static void randomizeBoard (String [][] board, String [] die) {
+    ArrayList <Integer> ranNums = new ArrayList <Integer>(); 
+    for (int i = 0; i < die.length; i++) {
+      ranNums.add(i); //initialize arraylist with values from 0 to die.length-1 (inclusive)
+    }
+    Collections.shuffle(ranNums); //randomize order of valyes
+    
+    int count = 0;
+    for (int i = 0; i < board.length; i++) {
+      for (int j = 0; j < board[i].length; j++) {
+        board[i][j] = die[ranNums.get(count)]; //set board[i][j] to a previously generated random indexed String from die array
+        int randIndex = (int)(Math.random() * (board[i][j]).length()); //generate random number from 0 to length of String
+        board[i][j] = Character.toString(board[i][j].charAt(randIndex)); //set board[i][j] to a random character within the String
+        count++; //add one to counter so that next previously generated random number gets used
+      }
+    }
+    
+  }
+}
