@@ -6,21 +6,23 @@ public class Boggle {
   static boolean found = true;
   public static void main (String [] args) throws Exception{
     boolean gameRunning = true;
-    Scanner input = new Scanner(new File("wordlist.txt"),"UTF-8");
+    Scanner readFile = new Scanner(new File("wordlist.txt"),"UTF-8");
     Scanner sc = new Scanner(System.in);
     ArrayList<String> wordArrayList = new ArrayList<String>();
     
-    String [] wordList = wordArrayList.toArray(new String [wordArrayList.size()]); //convert arraylist to arraY
+    
     
     final int BOARD_SIZE = 5;
     String [] die = {"AAAFRS", "AAEEEE", "AAFIRS", "ADENNN", "AEEEEM", "AEEGMU", "AEGMNN", "AFIRSY", "BJKQXZ", "CCNSTW", "CEIILT", "CEILPT", "CEIPST", "DDLNOR", "DHHLOR", "DHHNOT", "DHLNOR", "EIIITT", "EMOTTT", "ENSSSU", "FIPRSY", "GORRVW", "HIPRRY", "NOOTUW", "OOOTTU"};
     int playerNumber, scoreLimit, minWordLen;
-    while(input.hasNext()){
-      wordArrayList.add(input.nextLine());
+    while(readFile.hasNext()){
+      wordArrayList.add(readFile.nextLine());
     }
+    String [] wordList = wordArrayList.toArray(new String [wordArrayList.size()]); //convert arraylist to arraY
+    
     outerloop:
       while(gameRunning){
-     //startMusic("sound.aiff");
+      //startMusic("sound.aiff");
       System.out.println("Do you want to have 1 player or 2 players?");
       playerNumber = sc.nextInt();
       System.out.println("Enter the score level you intend to play up to");
@@ -75,7 +77,6 @@ public class Boggle {
               System.out.println("Current score: " +score);
             }
           }
-          System.out.println("Times up!");
           
           if (score > scoreLimit) {
             System.out.println("User score: " +score +"\nCongratulations! You won!");
@@ -250,7 +251,7 @@ public class Boggle {
     return false;
   }
   
-   public static int checkDict(String[] wordList, String word, int min, int max) {
+  public static int checkDict(String[] wordList, String word, int min, int max) {
     int middle = (max + min)/2;
     
     if (max < min) {
@@ -333,5 +334,5 @@ public class Boggle {
     clip.loop(Clip.LOOP_CONTINUOUSLY); 
     clip.start();
   }
-
+  
 }
