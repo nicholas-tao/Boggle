@@ -1,5 +1,6 @@
 //USE THIS FILE
-/*Broken things: checkAdjacent, timer to be implemented
+/*Broken things: checkAdjacent
+ *TO ADD: timer, input validation
  */ 
 import java.util.*;
 import java.io.*;
@@ -246,8 +247,13 @@ public class Boggle {
   public static boolean validate(String word, int wordLen, String[] wordList, ArrayList<String> wordsEntered, String[][] board) {
     int min = 0;
     int max = wordList.length-1;
-    
-    if (checkDict(wordList, word, min, max) > -1 && checkLength(word, wordLen) && checkAdjacent(board, word) && checkDuplicateWord(wordsEntered, word)) {
+    String wordLowerCase = word.toLowerCase();
+    System.out.println(wordLowerCase);
+    System.out.println("checkDict: " +checkDict(wordList, word, min, max));
+    System.out.println("checkLength: " +checkLength(word, wordLen));
+    System.out.println("checkAdjacent: " +checkAdjacent(board, word));
+    System.out.println("checkDuplicateWord: "+checkDuplicateWord(wordsEntered, word));
+    if (checkDict(wordList, wordLowerCase, min, max) > -1 && checkLength(word, wordLen) && checkAdjacent(board, word) && checkDuplicateWord(wordsEntered, word)) {
       return true;
     }
     return false;
@@ -319,7 +325,7 @@ public class Boggle {
       found = true;
       return;
     }
-    for (int i=0; i<8; i++) {
+    for (int i=0; i < 8; i++) {
       if (indexValid(board, (row + x[i]), (col + y[i]), prevRow, prevCol)) {
         gridSearch(board, row + x[i], col + y[i], row, col, word, index+1, wordLen);
       }
