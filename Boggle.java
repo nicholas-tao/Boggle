@@ -291,6 +291,7 @@ public class Boggle {
   }
   
   public static boolean checkAdjacent(String[][] board, String word) {
+    word = word.toUpperCase();
     for (int i=0; i<board.length; i++) {
       for (int j=0; j<board[i].length; j++) {
         if (board[i][j].equals(Character.toString(word.charAt(0)))) {
