@@ -1,12 +1,11 @@
 //USE THIS FILE
 /*
- *TO ADD: timer, input validation, make changes from 1p mode to 2p mode
+ *TO ADD: timer, input validation
  */ 
 //import needed libraries
 import java.util.*;
 import java.io.*;
 import javax.sound.sampled.*;
-import java.util.Random;
 
 public class Boggle {
   static boolean found = false;
@@ -80,8 +79,6 @@ public class Boggle {
             System.out.println("Enter any words you see");
             String word = sc.nextLine();
             
-            //long elapsedTime =  System.nanoTime() - startTime;
-            //remaining-=elapsedTime;
             if(validate(word, minWordLen, wordList, wordsEntered, board)){
               wordsEntered.add(word);
               score+= word.length();
@@ -116,7 +113,7 @@ public class Boggle {
           System.out.println(p1 + " you go first!");
         }
         if(flipCoin == 1){
-          System.out.println(p1 + " you go first!");
+          System.out.println(p2 + " you go first!");
           String temp = p1;
           p1 = p2;
           p2 = temp;
@@ -142,15 +139,24 @@ public class Boggle {
           printBoard(board);
           
           //P1
-          System.out.println("Player 1, do you want to pass? Enter ‘y’ for yes and ‘n’ for no");
+          System.out.println(p1+", do you want to pass? Enter ‘y’ for yes and ‘n’ for no");
           String wantToPass1 = sc.next();
           if(wantToPass1.equals("y")){
             timesPassed1++;
           }
           if(wantToPass1.equals("n")){
-            System.out.println("Time has started");
-            while(remaining > 0){ //NEEDS WORK
-              System.out.println("Please enter the words: ");
+            System.out.println("Timer has started");
+            long startTime1 = System.nanoTime();
+            long stopTime1 = 15000000000L + startTime1; 
+            while (remaining > 0) {
+              long currentTime1 = System.nanoTime();
+              if (currentTime1 >= stopTime1) {
+                //textField.setVisble(false);
+                System.out.println("TIMES UP!");
+                remaining = 15000000000L;
+                break;
+              }
+              System.out.println("Enter any words you see");
               String word = sc.nextLine();
               
               if(validate(word, minWordLen, wordList, wordsEnteredP1, board)) {
@@ -161,37 +167,38 @@ public class Boggle {
                 System.out.println("WORD NOT FOUND"); 
               }
             }
-            //System.out.println("TIMES UP!");          
-            
+          }
             
             //P2
-            System.out.println("Player 2, do you want to pass? Enter ‘y’ for yes and ‘n’ for no");
+            System.out.println(p2+", do you want to pass? Enter ‘y’ for yes and ‘n’ for no");
             String wantToPass2 = sc.next();
             if(wantToPass2.equals("y")){
               timesPassed2++;
             }
             if(wantToPass2.equals("n")){
-              new Reminder(15);
               System.out.println("Time has started");
-              System.out.println("Enter 1 to pause");
-              while(remaining > 0){ //NEEDS WORK
-                System.out.println("Please enter the words: ");
-                String word = sc.next();
-                if(word.equals("1")){
-                  //pause timer
-                  System.out.println("Resume game by clicking ENTER");
-                  //resume timer
+              long startTime2 = System.nanoTime();
+              long stopTime2 = 15000000000L + startTime2; 
+              while (remaining > 0) {
+                long currentTime2 = System.nanoTime();
+                if (currentTime2 >= stopTime2) {
+                  //textField.setVisble(false);
+                  System.out.println("TIMES UP!");
+                  remaining = 15000000000L;
+                  break;
                 }
+                System.out.println("Enter any words you see");
+                String word = sc.next();
+                
                 if(validate(word, minWordLen, wordList, wordsEnteredP2, board)) {
                   score2+=word.length();
                   wordsEnteredP2.add(word);
                 }
-              }
-              System.out.println("TIMES UP!");          
+              }       
             }
             
-            System.out.println(p1 + " :score: " + score1);
-            System.out.println(p2 + " :score: " + score2);
+            System.out.println(p1 + "'s score: " + score1);
+            System.out.println(p2 + "'s score: " + score2);
             if(score1>score2 && score1 >= scoreLimit){
               System.out.println(p1+ " wins!");
             }else if(score2>score1 && score2 >= scoreLimit){
@@ -199,14 +206,16 @@ public class Boggle {
             }else if (score1 ==score2 && score1 >=scoreLimit){
               System.out.print("Tie game"); 
             }
+            /*
             System.out.println("Do you want to restart or exit the game? [Enter ‘r’ for restart, or ‘e’ to exit]");
             String restartOrExit = sc.next();
             if(restartOrExit.equals("r")){
               continue outerloop;
             }else if(restartOrExit.equals("e")){
+              System.out.println("Thank you for playing!");
               break outerloop;
             }
-            
+            */
             System.out.println("Do you want to play again?");
             String continueGame = sc.next();
             if(continueGame.equals("n")){
@@ -218,7 +227,7 @@ public class Boggle {
           }
         }
       }
-    }
+    
   }
   public static void randomizeBoard (String [][] board, String [] die) {
     ArrayList <Integer> ranNums = new ArrayList <Integer>(); 
