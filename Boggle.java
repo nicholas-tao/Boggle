@@ -249,10 +249,6 @@ public class Boggle {
     int min = 0;
     int max = wordList.length-1;
     String wordLowerCase = word.toLowerCase();
-    System.out.println("checkDict: " +checkDict(wordList, word, min, max));
-    System.out.println("checkLength: " +checkLength(word, wordLen));
-    System.out.println("checkAdjacent: " +checkAdjacent(board, word));
-    System.out.println("checkDuplicateWord: "+checkDuplicateWord(wordsEntered, word));
     if (checkDict(wordList, wordLowerCase, min, max) > -1 && checkLength(word, wordLen) && checkAdjacent(board, word) && checkDuplicateWord(wordsEntered, word)) {
       return true;
     }
