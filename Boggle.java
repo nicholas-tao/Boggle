@@ -1,6 +1,7 @@
 //USE THIS FILE
 /*Broken things: checkAdjacent
  *TO ADD: timer, input validation
+ * issue: checkAdj only works for CAPS input. checkDict only works for lowercase input
  */ 
 import java.util.*;
 import java.io.*;
@@ -248,7 +249,6 @@ public class Boggle {
     int min = 0;
     int max = wordList.length-1;
     String wordLowerCase = word.toLowerCase();
-    System.out.println(wordLowerCase);
     System.out.println("checkDict: " +checkDict(wordList, word, min, max));
     System.out.println("checkLength: " +checkLength(word, wordLen));
     System.out.println("checkAdjacent: " +checkAdjacent(board, word));
@@ -265,12 +265,12 @@ public class Boggle {
     if (max < min) {
       return -1;
     }
-    if (word.compareTo(wordList[middle]) > 0) {
+    if (word.compareTo(wordList[middle])==0) {
+      return middle;
+    } else if (word.compareTo(wordList[middle]) > 0) {
       return checkDict(wordList, word, middle+1, max);
     } else if (word.compareTo(wordList[middle]) < 0) {
       return checkDict(wordList, word, min, middle-1);
-    } else if (word.compareTo(wordList[middle])==0) {
-      return middle;
     }
     return -1;
   }
