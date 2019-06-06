@@ -9,6 +9,7 @@ import javax.sound.sampled.*;
 import java.util.Random;
 public class Boggle {
   static boolean found = false;
+  static long remaining = 15000000000L;
   public static void main (String [] args) throws Exception{
     boolean gameRunning = true;
     Scanner readFile = new Scanner(new File("wordlist.txt"),"UTF-8");
@@ -61,24 +62,26 @@ public class Boggle {
             gameRunning = false;
             break outerloop;
           }
-          //new Reminder (15);
           sc.nextLine();//clear scanner
           System.out.println("Timer started\nEnter 1 to pause");
-          //while (remaining < 15000) {
-          for (int i = 0; i < 2; i++) {
+          while (remaining > 0) {
             System.out.println("Enter any words you see");
             String word = sc.nextLine();
-            if (word.equals("1")) {
-              //pause timer
-              System.out.println("Click ENTER to resume");
-              //resume timer
+            long currentTime = System.nanoTime();
+            long stopTime = remaining + currentTime; 
+            if (currentTime == stopTime) {
+              //textField.setVisble(false);
+              System.out.println("times up");
             }
+
+            long elapsedTime =  System.nanoTime() - currentTime;
+            remaining-=elapsedTime;
             if(validate(word, minWordLen, wordList, wordsEntered, board)){
               wordsEntered.add(word);
               score+= word.length();
-              System.out.println("Current score: " +score);
+              System.out.println("VALID WORD ENTERED\nCurrent score: " +score);
             } else {
-              System.out.println("Not found");
+              System.out.println("WORD NOT FOUND");
             }
           }
           
@@ -145,7 +148,7 @@ public class Boggle {
             //new Reminder(15);
             System.out.println("Time has started");
             System.out.println("Enter 1 to pause");
-            while(remaining < 15000){ //NEEDS WORK
+            while(/*remaining < 15000*/ true){ //NEEDS WORK
               System.out.println("Please enter the words: ");
               String word = sc.next();
               if(word.equals("1")){
@@ -156,9 +159,13 @@ public class Boggle {
               if(validate(word, minWordLen, wordList, wordsEnteredP1, board)) {
                 score1+=word.length();
                 wordsEnteredP1.add(word);
+                System.out.println("VALID WORD ENTERED\nCurrent score: " +score1);
+              } else {
+                System.out.println("WORD NOT FOUND");
+                
               }
             }
-            System.out.println("TIMES UP!");          
+            //System.out.println("TIMES UP!");          
           }
           
           //P2
@@ -171,7 +178,7 @@ public class Boggle {
             new Reminder(15);
             System.out.println("Time has started");
             System.out.println("Enter 1 to pause");
-            while(remaining < 15000){ //NEEDS WORK
+            while(remaining > 0){ //NEEDS WORK
               System.out.println("Please enter the words: ");
               String word = sc.next();
               if(word.equals("1")){
