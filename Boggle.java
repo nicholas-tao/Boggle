@@ -28,7 +28,7 @@ public class Boggle {
       while(gameRunning){
       //startMusic("sound.aiff");
       System.out.println("Do you want to have 1 player or 2 players?");
-      playerNumber = sc.nextInt();
+      playerNumber = sc.nextInt(); 
       System.out.println("Enter the score level you intend to play up to");
       scoreLimit = sc.nextInt();
       System.out.println("Enter the minimum word length you prefer");
@@ -121,18 +121,17 @@ public class Boggle {
         }
         
         String board[][] = new String[BOARD_SIZE][BOARD_SIZE];
-        ArrayList<String> wordsEnteredP1 = new ArrayList<String>();
-        ArrayList<String> wordsEnteredP2 = new ArrayList<String>();
+        ArrayList<String> wordsEntered2P = new ArrayList<String>();
         int timesPassed1 = 0;
         int timesPassed2 = 0;
         randomizeBoard(board, die);
+        boolean p1Wins = false;
         outer2:
           while(gameRunning){
           if (timesPassed1 ==2 && timesPassed2 == 2) {
             System.out.println("Board has been randomized!");
             randomizeBoard(board, die);
-            wordsEnteredP1.clear();
-            wordsEnteredP2.clear();
+            wordsEntered2P.clear();
             timesPassed1 = 0;
             timesPassed2 = 0;
           }
@@ -161,50 +160,53 @@ public class Boggle {
               System.out.println("Enter any words you see");
               String word = sc.nextLine();
               
-              if(validate(word, minWordLen, wordList, wordsEnteredP1, board)) {
+              if(validate(word, minWordLen, wordList, wordsEntered2P, board)) {
                 score1+=word.length();
-                wordsEnteredP1.add(word);
+                wordsEntered2P.add(word);
                 System.out.println("VALID WORD ENTERED\nCurrent score: " +score1);
                 if(score1>score2 && score1 >= scoreLimit){
-                  System.out.println(p1+ " wins!");
-                } else {
-                  System.out.println("INVALID WORD"); 
-                }
-              }
+                  p1Wins = true;
+                  break;
+                } 
+              }else {
+                System.out.println("INVALID WORD"); 
+              } 
             }
           } 
           //P2
-          System.out.println(p2+", do you want to pass? Enter ‘y’ for yes and ‘n’ for no");
-          String wantToPass2 = sc.nextLine();
-          if(wantToPass2.equals("y")){
-            timesPassed2++;
-          }
-          if(wantToPass2.equals("n")){
-            System.out.println("Time has started");
-            long startTime2 = System.nanoTime();
-            long stopTime2 = 15000000000L + startTime2; 
-            while (remaining > 0) {
-              long currentTime2 = System.nanoTime();
-              if (currentTime2 >= stopTime2) {
-                //textField.setVisble(false);
-                System.out.println("TIMES UP!");
-                remaining = 15000000000L;
-                break;
-              }
-              System.out.println("Enter any words you see");
-              String word = sc.nextLine();
-              
-              if(validate(word, minWordLen, wordList, wordsEnteredP2, board)) {
-                score2+=word.length();
-                wordsEnteredP2.add(word);
-                System.out.println("VALID WORD ENTERED\nCurrent score: " +score2);
-                if(score2>score1 && score2 >= scoreLimit){
-                  System.out.println(p2+" wins!"); 
+          if (!p1Wins){
+            System.out.println(p2+", do you want to pass? Enter ‘y’ for yes and ‘n’ for no");
+            String wantToPass2 = sc.nextLine();
+            if(wantToPass2.equals("y")){
+              timesPassed2++;
+            }
+            if(wantToPass2.equals("n")){
+              System.out.println("Time has started");
+              long startTime2 = System.nanoTime();
+              long stopTime2 = 15000000000L + startTime2; 
+              while (remaining > 0) {
+                long currentTime2 = System.nanoTime();
+                if (currentTime2 >= stopTime2) {
+                  //textField.setVisble(false);
+                  System.out.println("TIMES UP!");
+                  remaining = 15000000000L;
+                  break;
                 }
-              } else {
-                System.out.println("INVALID WORD");
-              }
-            }       
+                System.out.println("Enter any words you see");
+                String word = sc.nextLine();
+                
+                if(validate(word, minWordLen, wordList, wordsEntered2P, board)) {
+                  score2+=word.length();
+                  wordsEntered2P.add(word);
+                  System.out.println("VALID WORD ENTERED\nCurrent score: " +score2);
+                  if(score2>score1 && score2 >= scoreLimit){
+                    break;
+                  }
+                } else {
+                  System.out.println("INVALID WORD");
+                }
+              }       
+            }
           }
           
           System.out.println(p1 + "'s score: " + score1);
@@ -228,7 +230,7 @@ public class Boggle {
            break outerloop;
            }
            */
-          System.out.println("Do you want to play again?");
+          System.out.println("Do you want to play again? [Enter 'y' for yes and 'n' for no]");
           String continueGame = sc.nextLine();
           if(continueGame.equals("n")){
             gameRunning = false;
@@ -351,7 +353,6 @@ public class Boggle {
       }
     }
   }
-  
   public static void startMusic(String filepath) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
     AudioInputStream audioInputStream;
     audioInputStream = AudioSystem.getAudioInputStream(new File(filepath).getAbsoluteFile()); 
