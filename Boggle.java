@@ -175,74 +175,74 @@ public class Boggle {
                 }
               }
             }
-            
-            //P2
-            System.out.println(p2+", do you want to pass? Enter ‘y’ for yes and ‘n’ for no");
-            String wantToPass2 = sc.nextLine();
-            if(wantToPass2.equals("y")){
-              timesPassed2++;
-            }
-            if(wantToPass2.equals("n")){
-              System.out.println("Time has started");
-              long startTime2 = System.nanoTime();
-              long stopTime2 = 15000000000L + startTime2; 
-              while (remaining > 0) {
-                long currentTime2 = System.nanoTime();
-                if (currentTime2 >= stopTime2) {
-                  //textField.setVisble(false);
-                  System.out.println("TIMES UP!");
-                  remaining = 15000000000L;
-                  break;
+          } 
+          //P2
+          System.out.println(p2+", do you want to pass? Enter ‘y’ for yes and ‘n’ for no");
+          String wantToPass2 = sc.nextLine();
+          if(wantToPass2.equals("y")){
+            timesPassed2++;
+          }
+          if(wantToPass2.equals("n")){
+            System.out.println("Time has started");
+            long startTime2 = System.nanoTime();
+            long stopTime2 = 15000000000L + startTime2; 
+            while (remaining > 0) {
+              long currentTime2 = System.nanoTime();
+              if (currentTime2 >= stopTime2) {
+                //textField.setVisble(false);
+                System.out.println("TIMES UP!");
+                remaining = 15000000000L;
+                break;
+              }
+              System.out.println("Enter any words you see");
+              String word = sc.nextLine();
+              
+              if(validate(word, minWordLen, wordList, wordsEnteredP2, board)) {
+                score2+=word.length();
+                wordsEnteredP2.add(word);
+                System.out.println("VALID WORD ENTERED\nCurrent score: " +score2);
+                if(score2>score1 && score2 >= scoreLimit){
+                  System.out.println(p2+" wins!"); 
                 }
-                System.out.println("Enter any words you see");
-                String word = sc.nextLine();
-                
-                if(validate(word, minWordLen, wordList, wordsEnteredP2, board)) {
-                  score2+=word.length();
-                  wordsEnteredP2.add(word);
-                  System.out.println("VALID WORD ENTERED\nCurrent score: " +score2);
-                  if(score2>score1 && score2 >= scoreLimit){
-                    System.out.println(p2+" wins!"); 
-                  }
-                } else {
-                  System.out.println("INVALID WORD");
-                }
-              }       
-            }
-            
-            System.out.println(p1 + "'s score: " + score1);
-            System.out.println(p2 + "'s score: " + score2);
-            if(score1>score2 && score1 >= scoreLimit){
-              System.out.println(p1+ " wins!");
-            }else if(score2>score1 && score2 >= scoreLimit){
-              System.out.println(p2+" wins!"); 
-            }else if (score1 ==score2 && score1 >=scoreLimit){
-              System.out.print("Tie game"); 
-            } else {
-              continue;
-            }
-            /*
-             System.out.println("Do you want to restart or exit the game? [Enter ‘r’ for restart, or ‘e’ to exit]");
-             String restartOrExit = sc.next();
-             if(restartOrExit.equals("r")){
-             continue outerloop;
-             }else if(restartOrExit.equals("e")){
-             System.out.println("Thank you for playing!");
-             break outerloop;
-             }
-             */
-            System.out.println("Do you want to play again?");
-            String continueGame = sc.nextLine();
-            if(continueGame.equals("n")){
-              gameRunning = false;
-              System.out.println("Thanks for playing!");
-            }else if(continueGame.equals("y")){
-              continue outerloop;
-            }
+              } else {
+                System.out.println("INVALID WORD");
+              }
+            }       
+          }
+          
+          System.out.println(p1 + "'s score: " + score1);
+          System.out.println(p2 + "'s score: " + score2);
+          if(score1>score2 && score1 >= scoreLimit){
+            System.out.println(p1+ " wins!");
+          }else if(score2>score1 && score2 >= scoreLimit){
+            System.out.println(p2+" wins!"); 
+          }else if (score1 ==score2 && score1 >=scoreLimit){
+            System.out.print("Tie game"); 
+          } else {
+            continue;
+          }
+          /*
+           System.out.println("Do you want to restart or exit the game? [Enter ‘r’ for restart, or ‘e’ to exit]");
+           String restartOrExit = sc.next();
+           if(restartOrExit.equals("r")){
+           continue outerloop;
+           }else if(restartOrExit.equals("e")){
+           System.out.println("Thank you for playing!");
+           break outerloop;
+           }
+           */
+          System.out.println("Do you want to play again?");
+          String continueGame = sc.nextLine();
+          if(continueGame.equals("n")){
+            gameRunning = false;
+            System.out.println("Thanks for playing!");
+          }else if(continueGame.equals("y")){
+            continue outerloop;
           }
         }
       }
     }
+      
   }
   public static void randomizeBoard (String [][] board, String [] die) {
     ArrayList <Integer> ranNums = new ArrayList <Integer>(); 
