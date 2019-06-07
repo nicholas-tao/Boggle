@@ -37,7 +37,6 @@ public class Boggle {
       if (playerNumber==1) {
         ArrayList<String> wordsEntered = new ArrayList<String>();
         int score = 0;
-        int timesPassed = 0;
         String board[][] = new String[BOARD_SIZE][BOARD_SIZE];
         System.out.println("Here is the board");
         randomizeBoard (board, die);
@@ -51,15 +50,14 @@ public class Boggle {
           if (passRestartExit == 1) {
             randomizeBoard(board, die);
             wordsEntered.clear();
-            timesPassed = 0;
             System.out.println("Board has been randomized!");
             printBoard(board);
           }else if (passRestartExit == 2) {
             System.out.println("Okay, get ready!");
           }else if (passRestartExit == 3) {
-            continue inner1;
+            continue outerloop;
           }else if (passRestartExit == 4 ) {
-            System.out.println("Thank you for playing”");
+            System.out.println("Thank you for playing!");
             gameRunning = false;
             break outerloop;
           } 
@@ -92,7 +90,7 @@ public class Boggle {
               String continueGame = sc.nextLine();
               if (continueGame.equals("n")) {
                 gameRunning = false;
-                System.out.println("Thank you for playing");
+                System.out.println("Thank you for playing!");
               } else {
                 continue outerloop;
               }
@@ -221,15 +219,16 @@ public class Boggle {
             continue;
           }
           /*
-           System.out.println("Do you want to restart or exit the game? [Enter ‘r’ for restart, or ‘e’ to exit]");
-           String restartOrExit = sc.next();
-           if(restartOrExit.equals("r")){
-           continue outerloop;
-           }else if(restartOrExit.equals("e")){
-           System.out.println("Thank you for playing!");
-           break outerloop;
-           }
-           */
+          System.out.println("Do you want to restart or exit the game? [Enter ‘r’ for restart, or ‘e’ to exit]");
+          String restartOrExit = sc.next();
+          if(restartOrExit.equals("r")){
+            continue outerloop;
+          }else if(restartOrExit.equals("e")){
+            System.out.println("Thank you for playing!");
+            break outerloop;
+          }
+          */
+          
           System.out.println("Do you want to play again? [Enter 'y' for yes and 'n' for no]");
           String continueGame = sc.nextLine();
           if(continueGame.equals("n")){
