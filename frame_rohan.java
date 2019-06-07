@@ -3,21 +3,21 @@ import javax.swing.*;
 import javax.swing.border.Border;
 
 import java.awt.*;
-public class frame extends JFrame {
-	
+public class frame extends JFrame{ 
 	static String[][] board = {{"B", "A", "D", "E", "L"}, 
 			{"Q", "D", "W", "P", "O"}, 
 			{"F", "I", "F", "N", "T"}, 
 			{"L", "O", "F", "A", "S"}, 
 			{"V", "H", "K", "S", "N"}};
 	static JLabel[][] boardLabelGrid = new JLabel[5][5];
+
   
   //layout
   FlowLayout flowLayout = new FlowLayout();
   JPanel pan1 = new JPanel();  
   JPanel pan3 = new JPanel();
   JPanel pan4 = new JPanel(); 
-  JPanel pan2 = new JPanel();
+  JPanel infoPanel = new JPanel();
   JPanel bottomButtons = new JPanel();
   
   JPanel timeRemainingPanel = new JPanel();
@@ -42,8 +42,12 @@ public class frame extends JFrame {
   JButton restartGame = new JButton("Restart"); //switch text to play when game state is paused
   JButton continueGame = new JButton("Continue");
   JButton exitGame = new JButton("Exit");
+  JButton pass = new JButton("Pass");
   
-  
+  JPanel playerTurnPanel = new JPanel();
+  JLabel playerTurnTitle = new JLabel("Player Turn:", JLabel.CENTER);
+  JLabel playerTurnLabel = new JLabel("Rohan's", JLabel.CENTER);
+	
   
   
   
@@ -70,11 +74,11 @@ public class frame extends JFrame {
                                                         JOptionPane.INFORMATION_MESSAGE, null,
                                                         possibleValues2, possibleValues2[0]);
     int minLength;
-    if(possibleValues2.equals("2")){
+    if (possibleValues2.equals("2")) {
       minLength = 2;
-    }else if(possibleValues2.equals("3")){
+    } else if(possibleValues2.equals("3")) {
       minLength = 3;
-    }else if(possibleValues2.equals("4")){
+    } else if(possibleValues2.equals("4")) {
       minLength = 4;
     }
     
@@ -95,8 +99,12 @@ public class frame extends JFrame {
     pan1.setLayout(new BoxLayout(pan1, BoxLayout.PAGE_AXIS));
     pan3.setLayout(new GridLayout(5,5));
     pan4.setLayout(flowLayout);
-    pan2.setLayout(new FlowLayout(FlowLayout.CENTER));
+    infoPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
     
+    //Intro Label
+    introLabel.setFont(font);
+    introLabel.setAlignmentX(CENTER_ALIGNMENT);
+    pan1.add(introLabel);
     
     //time remaining panel
     timeRemainingPanel.setLayout(new BoxLayout(timeRemainingPanel, BoxLayout.PAGE_AXIS)); //setting to flow layout
@@ -107,7 +115,6 @@ public class frame extends JFrame {
     timeRemainingPanel.add(timeRemainingTitle);
     timeRemainingPanel.add(timeRemaining);
     timeRemainingPanel.setBorder(upperBorder);
-    timeRemainingPanel.setPreferredSize(new Dimension(325, 65));
 
     //Score Panel 
     scorePanel.setLayout(new BoxLayout(scorePanel, BoxLayout.PAGE_AXIS));
@@ -118,29 +125,51 @@ public class frame extends JFrame {
     scorePanel.add(scoreTitle);
     scorePanel.add(score);
     scorePanel.setBorder(upperBorder);
-    scorePanel.setPreferredSize(new Dimension(325, 65));
     
-    if (playerNum == 2) {
-    		JPanel playerTurnPanel = new JPanel();
-    		JLabel playerTurnTitle = new JLabel("Player Turn:", JLabel.CENTER);
-    		JLabel playerTurnLabel = new JLabel("Rohan's", JLabel.CENTER);
+    //bottom buttons
+    restartGame.setPreferredSize(new Dimension(165, 25));
+    continueGame.setPreferredSize(new Dimension(165, 25));
+    exitGame.setPreferredSize(new Dimension(165, 25));
+    
+    bottomButtons.add(restartGame);
+    bottomButtons.add(continueGame);
+    bottomButtons.add(exitGame);
+    
+    if (playerNum == 2) { //If 2 player
     		
+    		playerTurnPanel.setLayout(new BoxLayout(playerTurnPanel, BoxLayout.PAGE_AXIS));
+    		playerTurnTitle.setFont(font);
+    		playerTurnLabel.setFont(font);
     		
+    		playerTurnTitle.setAlignmentX(CENTER_ALIGNMENT);
+    		playerTurnLabel.setAlignmentX(CENTER_ALIGNMENT);
     		
+    		playerTurnPanel.add(playerTurnTitle);
+    		playerTurnPanel.add(playerTurnLabel);
+    		
+    		playerTurnPanel.setBorder(upperBorder);
+    		
+    		playerTurnPanel.setPreferredSize(new Dimension(220, 65));
+    		scorePanel.setPreferredSize(new Dimension(220, 65));
+    	    timeRemainingPanel.setPreferredSize(new Dimension(230, 65));
+    	    infoPanel.add(playerTurnPanel);
+    	    
+    	    pass.setPreferredSize(new Dimension(165, 25));
+    	    bottomButtons.add(pass);
+    } else { //If 1 player
+        timeRemainingPanel.setPreferredSize(new Dimension(325, 65));
+        scorePanel.setPreferredSize(new Dimension(325, 65));
+        shakeBoard.setPreferredSize(new Dimension(165, 25));
+
+        bottomButtons.add(shakeBoard);
     }
 
-    pan2.add(timeRemainingPanel);
-    pan2.add(scorePanel);
+    infoPanel.add(timeRemainingPanel);
+    infoPanel.add(scorePanel);
     
-    introLabel.setFont(font);
-    introLabel.setAlignmentX(CENTER_ALIGNMENT);
-    pan1.add(introLabel);
-    System.out.println(pan2);
-    pan1.add(pan2);
+    
+    pan1.add(infoPanel);
     pan1.add(pan3);
-    
-    
-    
     pan1.add(pan4);
     
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -156,25 +185,15 @@ public class frame extends JFrame {
     pan4.add(enterField);
     pan4.add(enterButton);
     
-    restartGame.setPreferredSize(new Dimension(165, 25));
-    continueGame.setPreferredSize(new Dimension(165, 25));
-    exitGame.setPreferredSize(new Dimension(165, 25));
-    shakeBoard.setPreferredSize(new Dimension(165, 25));
-    
-    bottomButtons.add(restartGame);
-    bottomButtons.add(continueGame);
-    bottomButtons.add(exitGame);
-    bottomButtons.add(shakeBoard);
-    pan1.add(bottomButtons);    //adding panels
+    pan1.add(bottomButtons); 
     
     add(pan1);
     setVisible(true); 
-    setLocationRelativeTo(null);// centering the frame
-  }//end of constructor
+    setLocationRelativeTo(null); // centering the frame
+  }
   
   public static void main(String[] args){
     frame frame1 =new frame(); 
-    
-  }//end of main method
+  }
   
 }
