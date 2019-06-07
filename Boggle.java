@@ -87,7 +87,7 @@ public class Boggle {
               score+= word.length();
               System.out.println("VALID WORD ENTERED\nCurrent score: " +score);
             } else {
-              System.out.println("WORD NOT FOUND");
+              System.out.println("INVALID WORD");
             }
             if (score > scoreLimit) {
               System.out.println("User score: " +score +"\nCongratulations! You won!");
@@ -168,11 +168,13 @@ public class Boggle {
                 score1+=word.length();
                 wordsEnteredP1.add(word);
                 System.out.println("VALID WORD ENTERED\nCurrent score: " +score1);
-              } else {
-                System.out.println("WORD NOT FOUND"); 
+                if(score1>score2 && score1 >= scoreLimit){
+                  System.out.println(p1+ " wins!");
+                } else {
+                  System.out.println("INVALID WORD"); 
+                }
               }
             }
-          }
             
             //P2
             System.out.println(p2+", do you want to pass? Enter ‘y’ for yes and ‘n’ for no");
@@ -198,6 +200,12 @@ public class Boggle {
                 if(validate(word, minWordLen, wordList, wordsEnteredP2, board)) {
                   score2+=word.length();
                   wordsEnteredP2.add(word);
+                  System.out.println("VALID WORD ENTERED\nCurrent score: " +score2);
+                  if(score2>score1 && score2 >= scoreLimit){
+                    System.out.println(p2+" wins!"); 
+                  }
+                } else {
+                  System.out.println("INVALID WORD");
                 }
               }       
             }
@@ -214,15 +222,15 @@ public class Boggle {
               continue;
             }
             /*
-            System.out.println("Do you want to restart or exit the game? [Enter ‘r’ for restart, or ‘e’ to exit]");
-            String restartOrExit = sc.next();
-            if(restartOrExit.equals("r")){
-              continue outerloop;
-            }else if(restartOrExit.equals("e")){
-              System.out.println("Thank you for playing!");
-              break outerloop;
-            }
-            */
+             System.out.println("Do you want to restart or exit the game? [Enter ‘r’ for restart, or ‘e’ to exit]");
+             String restartOrExit = sc.next();
+             if(restartOrExit.equals("r")){
+             continue outerloop;
+             }else if(restartOrExit.equals("e")){
+             System.out.println("Thank you for playing!");
+             break outerloop;
+             }
+             */
             System.out.println("Do you want to play again?");
             String continueGame = sc.nextLine();
             if(continueGame.equals("n")){
@@ -234,7 +242,7 @@ public class Boggle {
           }
         }
       }
-    
+    }
   }
   public static void randomizeBoard (String [][] board, String [] die) {
     ArrayList <Integer> ranNums = new ArrayList <Integer>(); 
@@ -300,8 +308,7 @@ public class Boggle {
   public static boolean checkDuplicateWord(ArrayList<String> usedWords, String word) {
     if (usedWords.contains(word)) {
       return false;
-    }
-    
+    }    
     return true;
   }
   
