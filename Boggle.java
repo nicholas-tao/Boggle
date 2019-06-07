@@ -45,12 +45,15 @@ public class Boggle {
           while (gameRunning) {
           
           printBoard(board);
-          System.out.println("Would you like to:\n1.Pass\n2.Continue\n3.Restart\n4.Exit\n5.Randomize Board [Enter the number]");
+          System.out.println("Would you like to:\n1.Randomize Board\n2.Continue\n3.Restart\n4.Exit[Enter the number]");
           int passRestartExit = sc.nextInt();
           
           if (passRestartExit == 1) {
-            timesPassed++;
-            continue; //go back to top of loop
+            randomizeBoard(board, die);
+            wordsEntered.clear();
+            timesPassed = 0;
+            System.out.println("Board has been randomized!");
+            printBoard(board);
           }else if (passRestartExit == 2) {
             System.out.println("Okay, get ready!");
           }else if (passRestartExit == 3) {
@@ -59,13 +62,7 @@ public class Boggle {
             System.out.println("Thank you for playing”");
             gameRunning = false;
             break outerloop;
-          } else if (passRestartExit == 5) {
-            randomizeBoard(board, die);
-            wordsEntered.clear();
-            timesPassed = 0;
-            System.out.println("Board has been randomized!");
-            printBoard(board);
-          }
+          } 
           sc.nextLine();//clear scanner
           System.out.println("Timer started");
           
