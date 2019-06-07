@@ -39,16 +39,13 @@ public class Boggle {
         int score = 0;
         int timesPassed = 0;
         String board[][] = new String[BOARD_SIZE][BOARD_SIZE];
+        System.out.println("Here is the board");
         randomizeBoard (board, die);
         inner1:
           while (gameRunning) {
-          if (timesPassed == 2) {
-            randomizeBoard(board, die);
-            wordsEntered.clear();
-            timesPassed = 0;
-          }
+          
           printBoard(board);
-          System.out.println("Would you like to:\n1.Pass\n2.Continue\n3.Restart\n4.Exit [Enter the number]");
+          System.out.println("Would you like to:\n1.Pass\n2.Continue\n3.Restart\n4.Exit\n5.Randomize Board [Enter the number]");
           int passRestartExit = sc.nextInt();
           
           if (passRestartExit == 1) {
@@ -62,6 +59,12 @@ public class Boggle {
             System.out.println("Thank you for playing”");
             gameRunning = false;
             break outerloop;
+          } else if (passRestartExit == 5) {
+            randomizeBoard(board, die);
+            wordsEntered.clear();
+            timesPassed = 0;
+            System.out.println("Board has been randomized!");
+            printBoard(board);
           }
           sc.nextLine();//clear scanner
           System.out.println("Timer started");
@@ -100,10 +103,11 @@ public class Boggle {
           }        
         }
       } else if(playerNumber == 2){
+        sc.nextLine();
         System.out.println("Player 1, please enter your name:");
-        String p1 = sc.next();
+        String p1 = sc.nextLine();
         System.out.println("Player 2, please enter your name:");
-        String p2 = sc.next();
+        String p2 = sc.nextLine();
         int score1 = 0;
         int score2 = 0;
         
@@ -128,6 +132,7 @@ public class Boggle {
         outer2:
           while(gameRunning){
           if (timesPassed1 ==2 && timesPassed2 == 2) {
+            System.out.println("Board has been randomized!");
             randomizeBoard(board, die);
             wordsEnteredP1.clear();
             wordsEnteredP2.clear();
@@ -140,7 +145,7 @@ public class Boggle {
           
           //P1
           System.out.println(p1+", do you want to pass? Enter ‘y’ for yes and ‘n’ for no");
-          String wantToPass1 = sc.next();
+          String wantToPass1 = sc.nextLine();
           if(wantToPass1.equals("y")){
             timesPassed1++;
           }
@@ -171,7 +176,7 @@ public class Boggle {
             
             //P2
             System.out.println(p2+", do you want to pass? Enter ‘y’ for yes and ‘n’ for no");
-            String wantToPass2 = sc.next();
+            String wantToPass2 = sc.nextLine();
             if(wantToPass2.equals("y")){
               timesPassed2++;
             }
@@ -188,7 +193,7 @@ public class Boggle {
                   break;
                 }
                 System.out.println("Enter any words you see");
-                String word = sc.next();
+                String word = sc.nextLine();
                 
                 if(validate(word, minWordLen, wordList, wordsEnteredP2, board)) {
                   score2+=word.length();
@@ -205,6 +210,8 @@ public class Boggle {
               System.out.println(p2+" wins!"); 
             }else if (score1 ==score2 && score1 >=scoreLimit){
               System.out.print("Tie game"); 
+            } else {
+              continue;
             }
             /*
             System.out.println("Do you want to restart or exit the game? [Enter ‘r’ for restart, or ‘e’ to exit]");
@@ -217,7 +224,7 @@ public class Boggle {
             }
             */
             System.out.println("Do you want to play again?");
-            String continueGame = sc.next();
+            String continueGame = sc.nextLine();
             if(continueGame.equals("n")){
               gameRunning = false;
               System.out.println("Thanks for playing!");
