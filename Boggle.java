@@ -1,4 +1,4 @@
-//USE THIS FILE
+//USE THIS FILE!!!
 /*
  * Names: Rohan Ravindran, Kevin Xu, Mandana Emam, Nicholas Tao
  * Date: june 12, 2019
@@ -27,7 +27,7 @@ public class BoggleAttemptToOptimize {
       //startMusic("sound.aiff"); //start music
       System.out.println("Do you have 1 player or 2 players?");
       playerNumber = sc.nextInt(); //store number of players
-      System.out.println("Enter the score level you intend to play up to");
+      System.out.println("Enter the score you intend to play up to");
       scoreToWin = sc.nextInt(); //store score needed to win
       System.out.println("Enter the minimum word length you prefer");
       minWordLen = sc.nextInt(); //score minimum word length
