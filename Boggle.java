@@ -11,18 +11,21 @@ import java.io.*;
 import javax.sound.sampled.*;
 
 public class BoggleAttemptToOptimize {
-  static boolean found = false;
-  static boolean gameRunning=true;
+  static boolean found = false; //boolean variable to indicate whether a word was found on the board
+  static boolean gameRunning = true; //boolean variable to indicate whether the game is running or not
   static Scanner sc = new Scanner(System.in); //declare scanner to read keyboard input
   static long remaining = 15000000000L; //equivalent to 15s, the time each player has for their turn
   public static void main (String [] args)  throws Exception  {
+    
     final int BOARD_SIZE = 5; //board size is 5
     String [] die = {"AAAFRS", "AAEEEE", "AAFIRS", "ADENNN", "AEEEEM", "AEEGMU", "AEGMNN", "AFIRSY", "BJKQXZ", "CCNSTW", "CEIILT", "CEILPT", "CEIPST", "DDLNOR", "DHHLOR", "DHHNOT", "DHLNOR", "EIIITT", "EMOTTT", "ENSSSU", "FIPRSY", "GORRVW", "HIPRRY", "NOOTUW", "OOOTTU"}; //array storing the 25 die
-    int playerNumber, scoreToWin;
+    int playerNumber, scoreToWin; //variables to determine number of players and score to win
     int minWordLen = 3; //default value for wordLength
     String board[][] = new String[BOARD_SIZE][BOARD_SIZE]; //declare a 2D array for the board
     String [] wordList = readFromFile(); //wordList stores dictionary words by calling the method
-    System.out.println("Welcome to Boggle, a game where you enter words that you see on a randomized board.\nThe letters must be horizontally, vertically, or diagonally adjcanet.\nThe words must be unique (Cannot enter same word twice), as well as in the English dictionary.\nEach letter in a valid word is one point and your objective is to reach a certain score first!\nLet's get started!\n");
+    System.out.println("Welcome to Boggle, a game where you enter words that you see on a randomized board.\nThe letters must be horizontally, vertically, or diagonally adjcanet.\nThe words must be unique (Cannot enter same word twice), as well as in the English dictionary.\nEach letter in a valid word is one point and your objective is to reach a certain score first!\nLet's get started!\n"); //welcome and rules
+    
+    //main loop for whole game
     while(gameRunning){
       //startMusic("sound.aiff"); //start music
       System.out.println("Do you have 1 player or 2 players?");
@@ -45,6 +48,7 @@ public class BoggleAttemptToOptimize {
       }
     }
   }
+  
   /*
    * Method randomizes the board of letters by choosing a random (no duplicates) die to place in each positon. Then,
    * it chooses a random letter from each die. The 25 letters chosen make up the board
@@ -333,11 +337,12 @@ public class BoggleAttemptToOptimize {
               p1Wins = true;
               break;
             } 
-          }else {
+          } else {
             System.out.println("INVALID WORD"); 
           } 
         }
       } 
+      
       //P2
       if (!p1Wins){
         System.out.println(p2+", do you want to pass? Enter ‘y’ for yes and ‘n’ for no");
@@ -378,9 +383,9 @@ public class BoggleAttemptToOptimize {
       System.out.println(p2 + "'s score: " + score2);
       if(score1>score2 && score1 >= scoreToWin){
         System.out.println(p1+ " wins!");
-      }else if(score2>score1 && score2 >= scoreToWin){
+      } else if(score2>score1 && score2 >= scoreToWin){
         System.out.println(p2+" wins!"); 
-      }else if (score1 ==score2 && score1 >=scoreToWin){
+      } else if (score1 ==score2 && score1 >=scoreToWin){
         System.out.print("Tie game"); 
       } else {
         System.out.println("Would you like to:\n1.Continue\n2.Restart\n3.Exit[Enter the number]");
