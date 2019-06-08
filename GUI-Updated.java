@@ -1,4 +1,3 @@
-
 import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.*;
@@ -351,5 +350,4 @@ public class frame extends JFrame implements ActionListener {
 		    }
 		    return wordArrayList.toArray(new String [wordArrayList.size()]); //convert arraylist to array
 		  }
-  
 }
