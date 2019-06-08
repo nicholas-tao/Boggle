@@ -22,7 +22,7 @@ public class BoggleAttemptToOptimize {
     int minWordLen = 3; //default value for wordLength
     String board[][] = new String[BOARD_SIZE][BOARD_SIZE]; //declare a 2D array for the board
     String [] wordList = readFromFile(); //wordList stores dictionary words by calling the method
-    
+    System.out.println("Welcome to Boggle, a game where you enter words that you see on a randomized board.\nThe letters must be horizontally, vertically, or diagonally adjcanet.\nThe words must be unique (Cannot enter same word twice), as well as in the English dictionary.\nEach letter in a valid word is one point and your objective is to reach a certain score first!\nLet's get started!\n");
     while(gameRunning){
       //startMusic("sound.aiff"); //start music
       System.out.println("Do you have 1 player or 2 players?");
@@ -249,7 +249,7 @@ public class BoggleAttemptToOptimize {
           System.out.println("INVALID WORD");
         }
         if (score > scoreToWin) {
-          System.out.println("User score: " +score +"\nCongratulations! You won!");
+          System.out.println("Congratulations! You won!");
           System.out.println("Do you want to play again? [Enter ‘y’ for yes or ‘n’ for no]");
           String continueGame = sc.nextLine();
           if (continueGame.equals("n")) {
@@ -293,7 +293,7 @@ public class BoggleAttemptToOptimize {
     boolean p1Wins = false;
     outer2:
       while(gameRunning){
-      if (timesPassed1 ==2 && timesPassed2 == 2) {
+      if (timesPassed1 >=2 && timesPassed2 >= 2) {
         System.out.println("Board has been randomized!");
         randomizeBoard(board, die);
         wordsEntered2P.clear();
@@ -346,7 +346,7 @@ public class BoggleAttemptToOptimize {
           timesPassed2++;
         }
         if(wantToPass2.equals("n")){
-          System.out.println("Time has started");
+          System.out.println("Timer has started");
           long startTime2 = System.nanoTime();
           long stopTime2 = 15000000000L + startTime2; 
           while (remaining > 0) {
