@@ -55,7 +55,7 @@ public class frame extends JFrame implements ActionListener {
   
   JPanel playerTurnPanel = new JPanel();
   JLabel playerTurnTitle = new JLabel("Player Turn:", JLabel.CENTER);
-  JLabel playerTurnLabel = new JLabel("Rohan's", JLabel.CENTER);
+  JLabel playerTurnLabel = new JLabel("X", JLabel.CENTER);
 	
   public frame() {
     //Intro Questions
