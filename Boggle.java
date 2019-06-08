@@ -18,41 +18,45 @@ public class BoggleAttemptToOptimize {
   public static void main (String [] args)  throws Exception  {
     final int BOARD_SIZE = 5; //board size is 5
     String [] die = {"AAAFRS", "AAEEEE", "AAFIRS", "ADENNN", "AEEEEM", "AEEGMU", "AEGMNN", "AFIRSY", "BJKQXZ", "CCNSTW", "CEIILT", "CEILPT", "CEIPST", "DDLNOR", "DHHLOR", "DHHNOT", "DHLNOR", "EIIITT", "EMOTTT", "ENSSSU", "FIPRSY", "GORRVW", "HIPRRY", "NOOTUW", "OOOTTU"}; //array storing the 25 die
-    int playerNumber, scoreLimit;
+    int playerNumber, scoreToWin;
     int minWordLen = 3; //default value for wordLength
     String board[][] = new String[BOARD_SIZE][BOARD_SIZE]; //declare a 2D array for the board
     String [] wordList = readFromFile(); //wordList stores dictionary words by calling the method
     
     while(gameRunning){
-      //startMusic("sound.aiff");
+      //startMusic("sound.aiff"); //start music
       System.out.println("Do you have 1 player or 2 players?");
-      playerNumber = sc.nextInt(); 
+      playerNumber = sc.nextInt(); //store number of players
       System.out.println("Enter the score level you intend to play up to");
-      scoreLimit = sc.nextInt();
+      scoreToWin = sc.nextInt(); //store score needed to win
       System.out.println("Enter the minimum word length you prefer");
-      minWordLen = sc.nextInt();
+      minWordLen = sc.nextInt(); //score minimum word length
       
       //1 Player Mode
       if (playerNumber==1) {
-        if(onePlayer(scoreLimit, minWordLen, board, die, wordList)) {
-          continue;
+        if(onePlayer(scoreToWin, minWordLen, board, die, wordList)) {
+          continue; //if the method returns true, the user wants to restart or play again
         }
       } else if(playerNumber == 2){
-        sc.nextLine();
-        if (twoPlayer(scoreLimit, minWordLen, board, die, wordList)) {
-          continue;
+        sc.nextLine(); //clear scanner
+        if (twoPlayer(scoreToWin, minWordLen, board, die, wordList)) {
+          continue;//if the method returns true, the user wants to restart or play again
         }
       }
     }
   }
+  /*
+   * Method randomizes the board of letters by choosing a random (no duplicates) die to place in each positon. Then,
+   * it chooses a random letter from each die. The 25 letters chosen make up the board
+   */ 
   public static void randomizeBoard (String [][] board, String [] die) {
-    ArrayList <Integer> ranNums = new ArrayList <Integer>(); 
+    ArrayList <Integer> ranNums = new ArrayList <Integer>(); //arraylist to store random numbers
     for (int i = 0; i < die.length; i++) {
       ranNums.add(i); //initialize arraylist with values from 0 to die.length-1 (inclusive)
     }
-    Collections.shuffle(ranNums); //randomize order of valyes
+    Collections.shuffle(ranNums); //randomize order of values
     
-    int count = 0;
+    int count = 0; //keeps track of which element in ranNums to access
     for (int i = 0; i < board.length; i++) {
       for (int j = 0; j < board[i].length; j++) {
         board[i][j] = die[ranNums.get(count)]; //set board[i][j] to a previously generated random indexed String from die array
@@ -62,16 +66,21 @@ public class BoggleAttemptToOptimize {
       }
     }
   }
-  
+  /*
+   * Method prints the elements of the 2D board array
+   */ 
   public static void printBoard (String [][] board) {
     for (int i = 0; i < board.length; i++) {
       for (int j = 0; j < board[i].length; j++) {
-        System.out.print(board[i][j] +" ");
+        System.out.print(board[i][j] +" "); //prints element at index [i][j]
       }
       System.out.println("");
     }
   }
-  
+  /*
+   * Method checks if the user-entered word is valid by calling the methods that check certain criteria in order for the word to be valid.
+   * If all methods indicate that the word is valid, the method returns true. If they do not all indicate this, the method returns false.
+   */ 
   public static boolean validate(String word, int wordLen, String[] wordList, ArrayList<String> wordsEntered, String[][] board) {
     int min = 0;
     int max = wordList.length-1;
@@ -82,6 +91,10 @@ public class BoggleAttemptToOptimize {
     return false;
   }
   
+  /*
+   * Method uses recursive binary search to search for the user's word in an array of words in the dictionary
+   * It returns the index of the word if it is found, or -1 if it is not.
+   */ 
   public static int checkDict(String[] wordList, String word, int min, int max) {
     int middle = (max + min)/2;
     if (max < min) {
@@ -97,6 +110,10 @@ public class BoggleAttemptToOptimize {
     return -1;
   }
   
+  /*
+   * Method checks whether the length of the word is greater than or equal to the minimum word length and returns true if it is.
+   * If the word is not of correct length, it returns false.
+   */ 
   public static boolean checkLength(String word, int wordLen) {
     if (word.length()>=wordLen) {
       return true;
@@ -104,6 +121,10 @@ public class BoggleAttemptToOptimize {
     return false;
   }
   
+  /*
+   * Method checks if the word has been used before by seeing if the arraylist containing words entered with the specific board, contains the 
+   * entered word. If the word has been entered, it returns false, otherwise, it returns true.
+   */ 
   public static boolean checkDuplicateWord(ArrayList<String> usedWords, String word) {
     if (usedWords.contains(word)) {
       return false;
@@ -153,6 +174,9 @@ public class BoggleAttemptToOptimize {
       }
     }
   }
+  /*
+   * Method plays music on a continuous loop
+   */ 
   public static void startMusic(String filepath) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
     AudioInputStream audioInputStream;
     audioInputStream = AudioSystem.getAudioInputStream(new File(filepath).getAbsoluteFile()); 
@@ -161,7 +185,10 @@ public class BoggleAttemptToOptimize {
     clip.loop(Clip.LOOP_CONTINUOUSLY); 
     clip.start();
   }
-  
+  /*
+   * Method reads from a text file and adds the words from the file to an arraylist. The method returns the arraylist with
+   * all the words, but as an array.
+   */ 
   public static String [] readFromFile ()  throws Exception  {
     Scanner readFile = new Scanner(new File("wordlist.txt"),"UTF-8"); //declare scanner to read text file
     ArrayList<String> wordArrayList = new ArrayList<String>(); //arraylist to store words from file
@@ -171,7 +198,10 @@ public class BoggleAttemptToOptimize {
     return wordArrayList.toArray(new String [wordArrayList.size()]); //convert arraylist to array
   }
   
-  public static boolean onePlayer (int scoreLimit, int minWordLen, String[][]board, String [] die, String [] wordList) {
+  /*
+   * Method runs the main Boggle game for one player.
+   */ 
+  public static boolean onePlayer (int scoreToWin, int minWordLen, String[][]board, String [] die, String [] wordList) {
     ArrayList<String> wordsEntered = new ArrayList<String>(); //arraylist to store words user enters
     int score = 0; //initial score is 0
     System.out.println("Here is the board");
@@ -218,7 +248,7 @@ public class BoggleAttemptToOptimize {
         } else {
           System.out.println("INVALID WORD");
         }
-        if (score > scoreLimit) {
+        if (score > scoreToWin) {
           System.out.println("User score: " +score +"\nCongratulations! You won!");
           System.out.println("Do you want to play again? [Enter ‘y’ for yes or ‘n’ for no]");
           String continueGame = sc.nextLine();
@@ -233,8 +263,10 @@ public class BoggleAttemptToOptimize {
     }
       return false;
   }
-  
-  public static boolean twoPlayer (int scoreLimit, int minWordLen, String[][]board, String [] die, String [] wordList) {
+  /*
+   * Method runs the main Boggle game for two players.
+   */
+  public static boolean twoPlayer (int scoreToWin, int minWordLen, String[][]board, String [] die, String [] wordList) {
     System.out.println("Player 1, please enter your name:");
     String p1 = sc.nextLine();
     System.out.println("Player 2, please enter your name:");
@@ -297,7 +329,7 @@ public class BoggleAttemptToOptimize {
             score1+=word.length();
             wordsEntered2P.add(word);
             System.out.println("VALID WORD ENTERED\nCurrent score: " +score1);
-            if(score1 > score2 && score1 >= scoreLimit){
+            if(score1 > score2 && score1 >= scoreToWin){
               p1Wins = true;
               break;
             } 
@@ -332,7 +364,7 @@ public class BoggleAttemptToOptimize {
               score2+=word.length();
               wordsEntered2P.add(word);
               System.out.println("VALID WORD ENTERED\nCurrent score: " +score2);
-              if(score2>score1 && score2 >= scoreLimit){
+              if(score2>score1 && score2 >= scoreToWin){
                 break;
               }
             } else {
@@ -344,11 +376,11 @@ public class BoggleAttemptToOptimize {
       
       System.out.println(p1 + "'s score: " + score1);
       System.out.println(p2 + "'s score: " + score2);
-      if(score1>score2 && score1 >= scoreLimit){
+      if(score1>score2 && score1 >= scoreToWin){
         System.out.println(p1+ " wins!");
-      }else if(score2>score1 && score2 >= scoreLimit){
+      }else if(score2>score1 && score2 >= scoreToWin){
         System.out.println(p2+" wins!"); 
-      }else if (score1 ==score2 && score1 >=scoreLimit){
+      }else if (score1 ==score2 && score1 >=scoreToWin){
         System.out.print("Tie game"); 
       } else {
         System.out.println("Would you like to:\n1.Continue\n2.Restart\n3.Exit[Enter the number]");
