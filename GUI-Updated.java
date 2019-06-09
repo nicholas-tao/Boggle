@@ -1,3 +1,4 @@
+
 import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.*;
@@ -8,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
 public class frame extends JFrame implements ActionListener { 
+	
   static ArrayList<String> wordsEntered = new ArrayList<String>();
   static String [] die = {"AAAFRS", "AAEEEE", "AAFIRS", "ADENNN", "AEEEEM", "AEEGMU", "AEGMNN", "AFIRSY", "BJKQXZ", "CCNSTW", "CEIILT", "CEILPT", "CEIPST", "DDLNOR", "DHHLOR", "DHHNOT", "DHLNOR", "EIIITT", "EMOTTT", "ENSSSU", "FIPRSY", "GORRVW", "HIPRRY", "NOOTUW", "OOOTTU"}; //array storing the 25 die
 
@@ -21,6 +23,8 @@ public class frame extends JFrame implements ActionListener {
   static long remaining = 15000000000L; 	
   static JLabel[][] boardLabelGrid = new JLabel[5][5];
   static int scoreValue = 0;
+  static int playerNum;
+  static String[] name;
   
   FlowLayout flowLayout = new FlowLayout();
   JPanel pan1 = new JPanel();  
@@ -49,14 +53,39 @@ public class frame extends JFrame implements ActionListener {
   //bottom buttons
   JButton shakeBoard = new JButton("Randomize Board!");
   JButton restartGame = new JButton("Restart"); //switch text to play when game state is paused
-  JButton continueGame = new JButton("Continue");
   JButton exitGame = new JButton("Exit");
   JButton pass = new JButton("Pass");
   
   JPanel playerTurnPanel = new JPanel();
   JLabel playerTurnTitle = new JLabel("Player Turn:", JLabel.CENTER);
-  JLabel playerTurnLabel = new JLabel("X", JLabel.CENTER);
+  JLabel playerTurnLabel = new JLabel("Rohan's", JLabel.CENTER);
 	
+  public void setupQuestions() {
+	    Object[] minLengthValues = { "2", "3", "4" }; //getting the min length of a word
+	    Object selectedValue2 = JOptionPane.showInputDialog(null,
+	                                                        "Please choose a minimum word length", "Input",
+	                                                        JOptionPane.INFORMATION_MESSAGE, null,
+	                                                        minLengthValues, minLengthValues[0]);
+	    minWordLen = Integer.parseInt(selectedValue2.toString());
+	    
+	    scoreLimit = 0;
+	    do {
+	      String scoreLimitInput = JOptionPane.showInputDialog("Please choose a score limit");//getting the score limit
+	      
+	      try {
+	    	  	scoreLimit = Integer.valueOf(scoreLimitInput); 
+	      } catch (Exception e) {
+	    	    JOptionPane.showMessageDialog(null, "You have to an integer value", "alert", JOptionPane.ERROR_MESSAGE);
+	    	    continue;
+	      }
+	      
+	      if (scoreLimit < 1) {
+	        JOptionPane.showMessageDialog(null, "You have to enter a value bigger than 1", "alert", JOptionPane.ERROR_MESSAGE);
+	      }
+	      
+	    } while(scoreLimit < 1);
+  }
+  
   public frame() {
     //Intro Questions
     JOptionPane.showMessageDialog(null, "Welcome to Boggle.", "How to play the game/rules", JOptionPane.INFORMATION_MESSAGE);
@@ -65,35 +94,13 @@ public class frame extends JFrame implements ActionListener {
                                                        "How many players are there?", "Input",
                                                        JOptionPane.INFORMATION_MESSAGE, null,
                                                        possibleValues, possibleValues[0]);   
-    int playerNum;
+    
     if(selectedValue.equals("One")) playerNum=1;
     else playerNum=2;
-    // end of getting the number of players
-    String[] name = new String[playerNum];
     
-    Object[] minLengthValues = { "2", "3", "4" }; //getting the min length of a word
-    Object selectedValue2 = JOptionPane.showInputDialog(null,
-                                                        "Please choose a minimum word length", "Input",
-                                                        JOptionPane.INFORMATION_MESSAGE, null,
-                                                        minLengthValues, minLengthValues[0]);
-    minWordLen = Integer.parseInt(selectedValue2.toString());
+    name = new String[playerNum];
     
-    scoreLimit = 0;
-    do {
-      String scoreLimitInput = JOptionPane.showInputDialog("Please choose a score limit");//getting the score limit
-      
-      try {
-    	  	scoreLimit = Integer.valueOf(scoreLimitInput); 
-      } catch (Exception e) {
-    	    JOptionPane.showMessageDialog(null, "You have to an integer value", "alert", JOptionPane.ERROR_MESSAGE);
-    	    continue;
-      }
-      
-      if (scoreLimit < 1) {
-        JOptionPane.showMessageDialog(null, "You have to enter a value bigger than 1", "alert", JOptionPane.ERROR_MESSAGE);
-      }
-      
-    } while(scoreLimit < 1);
+    setupQuestions();
     
     for(int i=0; i<playerNum; i++) { //getting the name of players
       name[i] = JOptionPane.showInputDialog(null, "Enter name of Player "+(i+1)+".", "Enter name");
@@ -136,15 +143,15 @@ public class frame extends JFrame implements ActionListener {
     
     //bottom buttons
     restartGame.setPreferredSize(new Dimension(165, 25));
-    continueGame.setPreferredSize(new Dimension(165, 25));
     exitGame.setPreferredSize(new Dimension(165, 25));
     
     bottomButtons.add(restartGame);
-    bottomButtons.add(continueGame);
+    restartGame.addActionListener(this);
+    
     bottomButtons.add(exitGame);
+    exitGame.addActionListener(this);
     
     if (playerNum == 2) {
-    		
     		playerTurnPanel.setLayout(new BoxLayout(playerTurnPanel, BoxLayout.PAGE_AXIS));
     		playerTurnTitle.setFont(font);
     		playerTurnLabel.setFont(font);
@@ -164,7 +171,6 @@ public class frame extends JFrame implements ActionListener {
     	    
     	    pass.setPreferredSize(new Dimension(165, 25));
     	    pass.addActionListener(this);
-    	    
     	    
     	    bottomButtons.add(pass);
     } else {
@@ -188,7 +194,7 @@ public class frame extends JFrame implements ActionListener {
     pan1.add(infoPanel);
     pan1.add(pan3);
     pan1.add(pan4);
-    pan1.add(bottomButtons);    //adding panels
+    pan1.add(bottomButtons); //adding panels
 
     enterButton.addActionListener(this);
     
@@ -196,27 +202,91 @@ public class frame extends JFrame implements ActionListener {
     
     add(pan1);
     setVisible(true); 
-    setLocationRelativeTo(null);// centering the frame
+    setLocationRelativeTo(null); //centering the frame
   }
   
+  public void resartGame() { //what about 2 players?
+	  setupQuestions();
+	  scoreValue = 0;
+	  score.setText(Integer.toString(scoreValue));
+	  randomizeBoard(board);
+	  updateBoard(board);
+	  
+	  //reset timer
+  }
   
-  public void actionPerformed(ActionEvent event) {
-	  if (event.getSource() == enterButton) {
+  public void actionPerformed(ActionEvent event) { //GUI ACTION RESPONSES
+	  if (event.getSource() == enterButton) { //Pressed Enter Button
 		  String word = enterField.getText();
 		  if (validate(word, minWordLen, wordList, wordsEntered, board)) {
 			  scoreValue += word.length();
 			  score.setText(Integer.toString(scoreValue));
 			  enterField.setText("");
+			  
+			  if (scoreValue >= scoreLimit && playerNum == 1) {
+				  Object[] resartGameValues = {"Yes", "No"};
+				  Object selectedValue = JOptionPane.showInputDialog(null,
+				                                                       "Congrats, " + name[0] +". You have finished the game by reaching " + scoreLimit + " points! \nWould you like to play again?", "Game Finished!",
+				                                                       JOptionPane.INFORMATION_MESSAGE, null,
+				                                                       resartGameValues, resartGameValues[1]);
+				  try {
+					  if (selectedValue.equals("Yes")) {
+						  resartGame();
+					  } else {
+						  System.exit(0);
+					  }
+				  } catch (Exception e) {
+					  System.out.println(e.getMessage());
+				  }
+				  //do have to check for time, to make sure they got the number of points in the desired time?
+			  } else if (scoreValue >= scoreLimit && playerNum == 2) {
+				  //game finish for 2 players
+			  }
 		  }
-	  } else if (event.getSource() == shakeBoard) {
+	  } else if (event.getSource() == shakeBoard) { //Pressed Randomize Board Button
 		  randomizeBoard(board);
 		  updateBoard(board);
 		  System.out.println("Random Board");
-
+	  } else if (event.getSource() == exitGame) { //Pressed Exit Game Button
+		  if (playerNum == 1) {
+			  //pause timer
+			  Object[] exitGameValues = {"Yes", "No"};
+			  Object selectedValue = JOptionPane.showInputDialog(null,
+			                                                       "Are you sure you would like to exit?", "Exit Game",
+			                                                       JOptionPane.INFORMATION_MESSAGE, null,
+			                                                       exitGameValues, exitGameValues[1]);
+			  try {
+				  if (selectedValue.equals("Yes")) {
+					  //show analysis
+					  System.exit(0);
+				  }
+			  } catch (Exception e) {
+				  System.out.println(e.getMessage());
+			  }
+		  } else { 
+			  //exit game for 2 players
+		  }
+	  } else if (event.getSource() == restartGame) {
+		  if (playerNum == 1) {
+			  //pause timer
+			  Object[] resartGameValues = {"Yes", "No"};
+			  Object selectedValue = JOptionPane.showInputDialog(null,
+			                                                       "Are you sure you would like to restart", "Restart Game",
+			                                                       JOptionPane.INFORMATION_MESSAGE, null,
+			                                                       resartGameValues, resartGameValues[1]);
+			  try {
+				  if (selectedValue.equals("Yes")) {
+					  resartGame();
+				  }
+			  } catch (Exception e) {
+				  System.out.println(e.getMessage());
+			  }
+		  } else {
+			  //resart game for 2 players
+		  }
 	  }
   }
-  
-  
+	  
   public static void main(String[] args) throws Exception {
     frame frame1 =new frame(); 
     
@@ -226,7 +296,6 @@ public class frame extends JFrame implements ActionListener {
     
     randomizeBoard(board);
     updateBoard(board);
-    
   }
   
   public static void updateBoard(String[][] board) {
@@ -268,7 +337,7 @@ public class frame extends JFrame implements ActionListener {
 	  }
 	  
 	  public static boolean checkLength(String word, int wordLen) {
-	    if (word.length()>=wordLen) {
+	    if (word.length() >= wordLen) {
 	      return true;
 	    }
 	    return false;
@@ -324,7 +393,7 @@ public class frame extends JFrame implements ActionListener {
 	    }
 	  }
 	  
-	  public static void randomizeBoard (String [][] board) {
+	  public static void randomizeBoard(String [][] board) {
 		    ArrayList <Integer> ranNums = new ArrayList <Integer>(); 
 		    for (int i = 0; i < die.length; i++) {
 		      ranNums.add(i); //initialize arraylist with values from 0 to die.length-1 (inclusive)
@@ -342,10 +411,10 @@ public class frame extends JFrame implements ActionListener {
 	    }
 	}
 	  
-	  public static String [] readFromFile ()  throws Exception  {
+	  public static String [] readFromFile()  throws Exception  {
 		    Scanner readFile = new Scanner(new File("wordlist.txt"),"UTF-8"); //declare scanner to read text file
 		    ArrayList<String> wordArrayList = new ArrayList<String>(); //arraylist to store words from file
-		    while(readFile.hasNext()){
+		    while(readFile.hasNext()) {
 		      wordArrayList.add(readFile.nextLine());
 		    }
 		    return wordArrayList.toArray(new String [wordArrayList.size()]); //convert arraylist to array
