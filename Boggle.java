@@ -232,9 +232,9 @@ public class BoggleAttemptToOptimize {
       } 
       sc.nextLine();//clear scanner
       System.out.println("Timer started");
-      long startTime = System.nanoTime();
-      long stopTime = 15000000000L + startTime; 
-      while (remaining > 0) {
+      long startTime = System.nanoTime(); //current time as startTime
+      long stopTime = 15000000000L + startTime; //initialize stopTime which is 15 seconds after current time
+      while (remaining > 0) {  //while there is time remaining, user is prompted to enter words
         long currentTime = System.nanoTime();
         if (currentTime >= stopTime) {
           //textField.setVisble(false);
@@ -244,14 +244,15 @@ public class BoggleAttemptToOptimize {
         }
         System.out.println("Enter any words you see");
         String word = sc.nextLine();
-        
-        if(validate(word, minWordLen, wordList, wordsEntered, board)){
+        //validate the word as they are entered
+        if(validate(word, minWordLen, wordList, wordsEntered, board)){ 
           wordsEntered.add(word);
           score+= word.length();
           System.out.println("VALID WORD ENTERED\nCurrent score: " +score);
         } else {
           System.out.println("INVALID WORD");
         }
+        //if user's score exceeds the score goal, user wins and is asked if they want to play again
         if (score > scoreToWin) {
           System.out.println("Congratulations! You won!");
           System.out.println("Do you want to play again? [Enter ‘y’ for yes or ‘n’ for no]");
@@ -290,14 +291,14 @@ public class BoggleAttemptToOptimize {
       p2 = temp;
     }
     
-    ArrayList<String> wordsEntered2P = new ArrayList<String>();
-    int timesPassed1 = 0;
-    int timesPassed2 = 0;
+    ArrayList<String> wordsEntered2P = new ArrayList<String>();  //declare a new arraylist to store all words users entered
+    int timesPassed1 = 0; //record number of times user1 passed
+    int timesPassed2 = 0; //record number of times user2 passed
     randomizeBoard(board, die);
     boolean p1Wins = false;
     outer2:
       while(gameRunning){
-      if (timesPassed1 >=2 && timesPassed2 >= 2) {
+      if (timesPassed1 >=2 && timesPassed2 >= 2) { //if both players pass twice, randomize board and clear wordEntered2P
         System.out.println("Board has been randomized!");
         randomizeBoard(board, die);
         wordsEntered2P.clear();
@@ -379,6 +380,7 @@ public class BoggleAttemptToOptimize {
         }
       }
       
+      //display final results
       System.out.println(p1 + "'s score: " + score1);
       System.out.println(p2 + "'s score: " + score2);
       if(score1>score2 && score1 >= scoreToWin){
@@ -400,6 +402,7 @@ public class BoggleAttemptToOptimize {
           return false;
         }
       }
+      //Prompt users if they want to play again
       System.out.println("Do you want to play again? [Enter 'y' for yes and 'n' for no]");
       String continueGame = sc.nextLine();
       if(continueGame.equals("n")){
