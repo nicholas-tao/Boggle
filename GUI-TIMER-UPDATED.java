@@ -24,7 +24,7 @@ public class frame extends JFrame implements ActionListener {
 	 *  - comment code
 	 *  - clean up code
 	 *  1 Player 
-	 *  		- delete timer
+	 *  		- 
 	 *  2 Player
 	 *  		- fix timer
 	 *  			- fix restartGame method 
@@ -63,6 +63,7 @@ public class frame extends JFrame implements ActionListener {
   JPanel bottomPanel = new JPanel(); 
   JPanel infoPanel = new JPanel();
   JPanel bottomButtons = new JPanel();
+  static JPanel validWordPanel = new JPanel();
   
   JPanel timeRemainingPanel = new JPanel();
   JPanel scorePanel = new JPanel();
@@ -72,12 +73,15 @@ public class frame extends JFrame implements ActionListener {
   
   JLabel scoreTitle = new JLabel("Your Score: ", JLabel.CENTER);
   static JLabel score = new JLabel("0", JLabel.CENTER);
+  
+  static JLabel validWord = new JLabel("Word is ", JLabel.CENTER);
 
   //other components
   JButton enterButton = new JButton("Enter");
   JLabel introLabel = new JLabel("Welcome To Boggle", SwingConstants.CENTER); //labels
-  JTextField enterField = new JTextField ("", 30);// blank text field
+  static JTextField enterField = new JTextField ("", 30);// blank text field
   static Font font = new Font("Sans Serif", Font.BOLD, 20);
+  static Font smallerFont = new Font("Sans Serif", Font.BOLD, 15);
   static Border labelBorder = BorderFactory.createEtchedBorder();
   Border upperBorder = BorderFactory.createDashedBorder(Color.BLUE, 4, 3);  
   
@@ -151,7 +155,7 @@ public class frame extends JFrame implements ActionListener {
     
     //MARK: Frame Setup
     setTitle("Boggle");
-    setSize(800, 500);
+    setSize(800, 530);
     
     totalPan.setLayout(new BoxLayout(totalPan, BoxLayout.PAGE_AXIS));
     gridPan.setLayout(new GridLayout(5,5));
@@ -183,6 +187,14 @@ public class frame extends JFrame implements ActionListener {
     scorePanel.add(score);
     scorePanel.setBorder(upperBorder);
     
+    //Valid Word
+    validWord.setFont(smallerFont);
+
+    validWord.setAlignmentX(CENTER_ALIGNMENT);
+
+    validWordPanel.add(validWord);
+    validWordPanel.setVisible(false);
+    
     //bottom buttons
     restartGame.setPreferredSize(new Dimension(165, 25));
     exitGame.setPreferredSize(new Dimension(165, 25));
@@ -192,6 +204,9 @@ public class frame extends JFrame implements ActionListener {
     
     bottomButtons.add(exitGame);
     exitGame.addActionListener(this);
+    
+    validWordPanel.setPreferredSize(new Dimension(400, 30));
+
     
     if (playerNum == 2) {
     		playerTurnPanel.setLayout(new BoxLayout(playerTurnPanel, BoxLayout.PAGE_AXIS));
@@ -209,6 +224,7 @@ public class frame extends JFrame implements ActionListener {
     		playerTurnPanel.setPreferredSize(new Dimension(257, 65));
     		scorePanel.setPreferredSize(new Dimension(257, 65));
     	    timeRemainingPanel.setPreferredSize(new Dimension(257, 65));
+
     	    infoPanel.add(playerTurnPanel);
     	    
     	    pass.setPreferredSize(new Dimension(165, 25));
@@ -227,12 +243,14 @@ public class frame extends JFrame implements ActionListener {
         bottomButtons.add(shakeBoard);
         playerScore = new int[1];
     }
-
+    
     infoPanel.add(timeRemainingPanel);
     infoPanel.add(scorePanel);
     
     bottomPanel.add(enterField);
     bottomPanel.add(enterButton);
+    bottomPanel.add(validWordPanel);
+
     
     gridPan.setPreferredSize(new Dimension(800, 200));
     
@@ -253,11 +271,16 @@ public class frame extends JFrame implements ActionListener {
   
   public static void resartGame() {
 	  setupQuestions();
+	  randomizeBoard(board);
+	  updateBoard(board);
+	  enterField.setText("");
+  	  validWordPanel.setVisible(false);
+  	  
 	  won = false;
 	  if (playerNum == 1) {
 		  playerScore[0] = 0;
 	  	  score.setText(Integer.toString(playerScore[0]));
-		  
+	  	  
 	  	  //reset timer
 	  } else {
 		  playerScore[0] = 0;
@@ -270,18 +293,16 @@ public class frame extends JFrame implements ActionListener {
 		  playerTurnLabel.setText(name[playerTurn]);
 		  //reset timer
 		  interval = 15;
-		  
+		  startTimer();
 	  }
-	  randomizeBoard(board);
-	  updateBoard(board);
-	  startTimer();
-	  
 	  //reset timer
   }
   
   public static void checkWon() {
 	  if (playerScore[playerTurn] >= scoreLimit) {
-		  timer.cancel();
+		  if (playerNum == 2) {
+			  timer.cancel();
+		  }
 		  won = true;
 		  Object[] resartGameValues = {"Yes", "No"};
 		  Object selectedValue = JOptionPane.showInputDialog(null,
@@ -305,22 +326,30 @@ public class frame extends JFrame implements ActionListener {
   public void actionPerformed(ActionEvent event) { //GUI ACTION RESPONSES
 	  if (event.getSource() == enterButton) { //Pressed Enter Button
 		  String word = enterField.getText();
-		  
+		  validWordPanel.setVisible(true);
 			  if (validate(word, minWordLen, wordList, wordsEntered, board)) {
 				  playerScore[playerTurn] += word.length();
 				  score.setText(Integer.toString(playerScore[playerTurn]));
 				  wordsEntered.add(word);
+				  validWord.setText("Word is VALID!");
+				  validWordPanel.setBorder(BorderFactory.createDashedBorder(Color.GREEN, 4, 3));
 				  enterField.setText("");
 				  
 				  checkWon();
 				  
+			  } else {
+				  validWord.setText("Word is INVALID!");
+				  validWordPanel.setBorder(BorderFactory.createDashedBorder(Color.RED, 4, 3));
+
 			  }
 	  } else if (event.getSource() == shakeBoard) { //Pressed Randomize Board Button
 		  randomizeBoard(board);
 		  updateBoard(board);
 		  System.out.println("Random Board");
 	  } else if (event.getSource() == exitGame) { //Pressed Exit Game Button
-		  timer.cancel();
+		  if (playerNum == 2) {
+			  timer.cancel();
+		  }
 		  String exitMessage = "";
 		  if (playerNum == 2) {
 			  if (playerTurn == 0) {
@@ -350,7 +379,9 @@ public class frame extends JFrame implements ActionListener {
 			  }
 		  
 	  } else if (event.getSource() == restartGame) {
-		  timer.cancel();
+		  if (playerNum == 2) {
+			  timer.cancel();
+		  }
 		  
 		  String exitMessage = "";
 		  if (playerNum == 2) {
