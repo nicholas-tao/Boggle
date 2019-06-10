@@ -90,9 +90,9 @@ public class BoggleAttemptToOptimize {
     int max = wordList.length-1;
     String wordLowerCase = word.toLowerCase();
     if (checkDict(wordList, wordLowerCase, min, max) > -1 && checkLength(word, wordLen) && checkAdjacent(board, word) && checkDuplicateWord(wordsEntered, word)) {
-      return true;
+      return true;  //if all of the check methods return true, then word is valid and validate returns true
     }
-    return false;
+    return false;  //otherwise it returns false
   }
   
   /*
@@ -104,14 +104,14 @@ public class BoggleAttemptToOptimize {
     if (max < min) {
       return -1;
     }
-    if (word.compareTo(wordList[middle])==0) {
-      return middle;
+    if (word.compareTo(wordList[middle])==0) {  
+      return middle;  //if word is equal to the middle, the method returns middle position
     } else if (word.compareTo(wordList[middle]) > 0) {
-      return checkDict(wordList, word, middle+1, max);
+      return checkDict(wordList, word, middle+1, max);  //if word is alphabetically after the middle, the method recursively calls and sets the min to mid-1
     } else if (word.compareTo(wordList[middle]) < 0) {
-      return checkDict(wordList, word, min, middle-1);
+      return checkDict(wordList, word, min, middle-1);  //if word is alphabetically before the middle, the method recursively calls and sets the max to mid-1
     }
-    return -1;
+    return -1; //if not found, return -1
   }
   
   /*
@@ -120,9 +120,9 @@ public class BoggleAttemptToOptimize {
    */ 
   public static boolean checkLength(String word, int wordLen) {
     if (word.length()>=wordLen) {
-      return true;
+      return true;  //if the length of the word user enters is less than the initial length, then checkLength returns true
     }
-    return false;
+    return false; //otherwise it returns false
   }
   
   /*
@@ -131,19 +131,23 @@ public class BoggleAttemptToOptimize {
    */ 
   public static boolean checkDuplicateWord(ArrayList<String> usedWords, String word) {
     if (usedWords.contains(word)) {
-      return false;
+      return false;  //if the usedWords arraylist contains the word user entered, then method returns false
     }    
-    return true;
+    return true;  //otherwise the user returns true
   }
   
+  /*
+   * Method checks if the word's letters are horizontally, vertically and diagonally adjacent to each other
+   * If the word is found, it returns true; otherwise it returns false
+   */
   public static boolean checkAdjacent(String[][] board, String word) {
-    word = word.toUpperCase();
+    word = word.toUpperCase(); //change the entered word to upper case
     for (int i=0; i<board.length; i++) {
       for (int j=0; j<board[i].length; j++) {
         if (board[i][j].equals(Character.toString(word.charAt(0)))) {
-          gridSearch(board, i, j, -1, -1, word, 0, word.length()-1);
+          gridSearch(board, i, j, -1, -1, word, 0, word.length()-1); //call gridSearch to recursively search the board
         }
-        if (found) {
+        if (found) { 
           found = false;
           return true;
         }
@@ -152,6 +156,10 @@ public class BoggleAttemptToOptimize {
     return false;
   }
   
+  /*
+   * Method checks if the index of the letter in gridSearch is valid on the board
+   * If the index is valid, it returns true; Otherwise, it returns false
+   */
   public static boolean indexValid(String[][] board, int row, int col, int prevRow, int prevCol) {
     int len = board.length;
     if ((row >= 0 && col >= 0 && row < len && col < len) && !(prevRow == row && prevCol == col)) {
@@ -160,7 +168,7 @@ public class BoggleAttemptToOptimize {
       return false;
     }
   }
-  
+ 
   public static void gridSearch(String[][] board, int row, int col, int prevRow, int prevCol, String word, int index, int wordLen) {
     int[] x = {-1, -1, -1, 0, 0, 1, 1, 1};
     int[] y = {-1, 0, 1, -1, 1, -1, 0, 1};
