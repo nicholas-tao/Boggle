@@ -1,6 +1,6 @@
 /*
  * Names: Rohan Ravindran, Kevin Xu, Mandana Emam, Nicholas Tao
- * Date: June 12, 2019
+ * Date: june 12, 2019
  * Assignment Title: Boggle
  * 
  */ 
