@@ -1,3 +1,11 @@
+/*
+ * Names: Rohan Ravindran, Kevin Xu, Mandana Emam, Nicholas Tao
+ * Date: june 12, 2019
+ * Assignment Title: Boggle
+ * 
+ */ 
+
+//import needed libraries
 import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.*;
@@ -497,7 +505,5 @@ public class frame extends JFrame implements ActionListener {
     readFile.close();
     return wordArrayList.toArray(new String [wordArrayList.size()]); //convert arraylist to array
     
-  }
-  
-  
+  } 
 }
