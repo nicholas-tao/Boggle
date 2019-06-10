@@ -43,6 +43,7 @@ public class frame extends JFrame implements ActionListener {
   static int playerTurn = 0;
   static int[] playerScore;
   static int passCounter = 0;
+  static Font font2 = new Font ("Sans Serif", Font.BOLD, 20);
   
   static JPanel pan3 = new JPanel();
   JPanel pan1 = new JPanel();  
@@ -64,6 +65,7 @@ public class frame extends JFrame implements ActionListener {
   JLabel introLabel = new JLabel("Welcome To Boggle", SwingConstants.CENTER); //labels
   JTextField enterField = new JTextField ("", 30);// blank text field
   Font font = new Font("Sans Serif", Font.BOLD, 20);
+
   static Border labelBorder = BorderFactory.createEtchedBorder();
   Border upperBorder = BorderFactory.createDashedBorder(Color.BLUE, 4, 3);  
   
@@ -378,6 +380,7 @@ public class frame extends JFrame implements ActionListener {
       for (int j=0; j<boardLabelGrid.length; j++) {
         boardLabelGrid[i][j] = new JLabel(board[i][j], JLabel.CENTER);
         boardLabelGrid[i][j].setBorder(labelBorder);
+       boardLabelGrid[i][j].setFont(font2);
         pan3.add(boardLabelGrid[i][j]);
       }
     }
