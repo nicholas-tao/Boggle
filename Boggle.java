@@ -253,13 +253,14 @@ public class BoggleAttemptToOptimize {
           System.out.println("INVALID WORD");
         }
         //if user's score exceeds the score goal, user wins and is asked if they want to play again
-        if (score > scoreToWin) {
+        if (score >= scoreToWin) {
           System.out.println("Congratulations! You won!");
           System.out.println("Do you want to play again? [Enter ‘y’ for yes or ‘n’ for no]");
           String continueGame = sc.nextLine();
           if (continueGame.equals("n")) {
             gameRunning = false;
             System.out.println("Thank you for playing!");
+            remaining = 0L;
           } else {
             return true;
           }
