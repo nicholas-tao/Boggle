@@ -6,13 +6,13 @@
  */ 
 /*
  * TO DO:
- * - comments (@rohan, please fill in the empty spots and also indexValid + gridSearch)
+ * - comments
  * bugs: 
  *   -it says "b are u ready", but player turn is a (for first turn)
- *   - timer stops at 1 instead of 0
  *   - program crashes if they pass before timer starts
  *   -getReady is messing with the code (if someone passes, the screen freezes for a few secs --> thread.sleep?)
- * 
+ * 	- cancel on input num players screen
+ * - cancel input on min word length screen
  * */
 
 //import needed libraries
@@ -24,12 +24,13 @@ import java.io.*;
 import javax.swing.*;
 import javax.sound.sampled.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class frame extends JFrame implements ActionListener { 
+public class frameTest extends JFrame implements ActionListener { 
   
   //declare global variables
   static ArrayList<String> wordsEntered = new ArrayList<String>();
@@ -48,7 +49,7 @@ public class frame extends JFrame implements ActionListener {
   static int playerTurn = 0; //keep track of turn
   static int[] playerScore; //scores of players
   static int [] passCounter; //counts times passed
-  static boolean gamePause = false; //keeps track of whether game is paused
+  static boolean hasWon = false; //keeps track of whether game is paused
   static int onePlayerTimeInterval; //time limit for one player mode
   
   static int interval = 15; //for 15s timer (2P mode)
@@ -146,7 +147,7 @@ public class frame extends JFrame implements ActionListener {
   /*
    * Constructor method for the frame of the game
    */
-  public frame() {
+  public frameTest() {
     //Intro Questions and Game Rules
     String gameRules = "Welcome to Boggle. Here's how to play: \n\n You must find words on the board that that are:\n" + 
       " - Touching each other, either horizontally vertically, or diagonally\n" + 
@@ -171,9 +172,11 @@ public class frame extends JFrame implements ActionListener {
     setupQuestions(); //call method to ask setup questions
     
     //getting the name of players
-    for(int i=0; i<playerNum; i++) { 
-      name[i] = JOptionPane.showInputDialog(null, "Enter name of Player "+(i+1)+".", "Enter name");
-    }
+    for(int i=0; i<playerNum; i++) { //getting the name of players
+    		
+        name[i] = JOptionPane.showInputDialog(null, "Enter name of Player "+(i+1)+".", "Enter name");
+      }
+    
     
     //MARK: Frame Setup
     setTitle("Boggle");
@@ -302,7 +305,7 @@ public class frame extends JFrame implements ActionListener {
     validWordPanel.setVisible(false);
     wordsEntered.removeAll(wordsEntered);
     
-    gamePause = false;
+    hasWon = false;
     if (playerNum == 1) {
       playerScore[0] = 0;
       score.setText(Integer.toString(playerScore[0]));
@@ -328,7 +331,7 @@ public class frame extends JFrame implements ActionListener {
   public static void checkWon() {
     if (playerScore[playerTurn] >= scoreToWin) { //if player has reached score limit
       timer.cancel(); //cancel timer
-      gamePause = true;
+      hasWon = true;
       Object[] resartGameValues = {"Yes", "No"};
       Object selectedValue = JOptionPane.showInputDialog(null, "Congrats, " + name[playerTurn] +". You have finished the game by reaching " + scoreToWin + " points! \nWould you like to play again?", "Game Finished!",JOptionPane.INFORMATION_MESSAGE, null,resartGameValues, resartGameValues[1]);
       
@@ -468,6 +471,9 @@ public class frame extends JFrame implements ActionListener {
     
     if (playerNum == 1) interval = onePlayerTimeInterval; //if one player mode, set the timer to the time they inputted
     if (playerNum==2)  playerTurn = (int)(Math.random()*2); // if 2 player, "flip a coin" (generate a random number from 0 to 1) to see who goes first
+    
+    System.out.println("Name: " + name[0] + ", " + name[1]);
+
     getReady();
     startTimer(); //start the timer
     
@@ -494,7 +500,6 @@ public class frame extends JFrame implements ActionListener {
     try {  
       Thread.sleep(time);
     } catch (Exception e) {}
-    //timeDelays(1000);
   } // end of time delays
   
   /*
@@ -517,22 +522,22 @@ public class frame extends JFrame implements ActionListener {
    * Method sets the interval of a timer 
    */
   public static int setTimerInterval() {
-    if (interval == 1 && playerNum == 2) { //once timer is finished
+    if (interval == 0 && playerNum == 2) { //once timer is finished
       if (playerTurn == 0) { playerTurn = 1; }
       else { playerTurn = 0; }
       playerTurnLabel.setText(name[playerTurn]);
       score.setText(Integer.toString(playerScore[playerTurn]));
       timer.cancel();
       checkWon();
-      if (!gamePause) {
+      if (!hasWon) {
         getReady();
         interval = 16;
         startTimer();
       }
-    } else if (interval == 1 && playerNum == 1) {
+    } else if (interval == 0 && playerNum == 1) {
       if (playerScore[playerTurn] < scoreToWin) {
         timer.cancel();
-        gamePause = true;
+        hasWon = true;
         Object[] resartGameValues = {"Yes", "No"};
         Object selectedValue = JOptionPane.showInputDialog(null,"Sorry, " + name[playerTurn] +". You have lost! \nWould you like to play again?", "Game Over!", JOptionPane.INFORMATION_MESSAGE, null, resartGameValues, resartGameValues[1]);
         
@@ -600,7 +605,7 @@ public class frame extends JFrame implements ActionListener {
   }
   
   /*
-   * Method returns true if word length is at least the lminimum word length. Otherwise,
+   * Method returns true if word length is at least the minimum word length. Otherwise,
    * it returns false.
    */ 
   public static boolean checkLength(String word, int wordLen) {
@@ -610,6 +615,10 @@ public class frame extends JFrame implements ActionListener {
     return false;
   }
   
+  /*
+   * Method returns true if word entered has not been entered before. Otherwise, it 
+   * returns false.
+   */ 
   public static boolean checkDuplicateWord(ArrayList<String> usedWords, String word) {
     if (usedWords.contains(word)) {
       return false;
@@ -622,48 +631,50 @@ public class frame extends JFrame implements ActionListener {
    * If the word is found, it returns true; otherwise it returns false
    */
   public static boolean checkAdjacent(String[][] board, String word) {
-    word = word.toUpperCase();
-    for (int i=0; i<board.length; i++) {
-      for (int j=0; j<board[i].length; j++) {
-        if (board[i][j].equals(Character.toString(word.charAt(0)))) {
-          gridSearch(board, i, j, -1, -1, word, 0, word.length()-1);
+    word = word.toUpperCase(); //Setting the word to upper case as string comparison is case sensitive 
+    for (int i=0; i<board.length; i++) { //nested for-loop looping over the board 2d array
+      for (int j=0; j<board[i].length; j++) { 
+        if (board[i][j].equals(Character.toString(word.charAt(0)))) { //if the board at index (i, j) equals to the first character of the word
+          gridSearch(board, i, j, -1, -1, word, 0, word.length()-1); //run the recursive gridSearch method with (i, j) as the initial coordinates
         }
-        if (found) {
-          found = false;
-          return true;
+        if (found) { //if global variable found is true
+          found = false; //set true to false
+          return true; //return true
         }
       }
     }
-    return false;
+    return false; //otherwise return false
   }
   /*
-   * @ROHAN
+   * Method returns true if a pair of coordinates (x, y) are of valid
+   * position on the board of characters. Otherwise, returns false.
    */
   public static boolean indexValid(String[][] board, int row, int col, int prevRow, int prevCol) {
-    int len = board.length;
-    if ((row >= 0 && col >= 0 && row < len && col < len) && !(prevRow == row && prevCol == col)) {
-      return true;
+    int len = board.length; //initlizing variable len to be the length of the board (grid of characters
+    if ((row >= 0 && col >= 0 && row < len && col < len) && !(prevRow == row && prevCol == col)) { //checking if the index (row, col) is valid
+      return true;																				// if valid, return true
     } else {
-      return false;
+      return false;																				//otherwise, return false
     }
   }
   /*
-   *  @ROHAN
+   *  Method recursively searches in 8 directions around the character until it is
+   *  able to find all the characters of the word on the grid.
    */
   public static void gridSearch(String[][] board, int row, int col, int prevRow, int prevCol, String word, int index, int wordLen) {
-    int[] x = {-1, -1, -1, 0, 0, 1, 1, 1};
-    int[] y = {-1, 0, 1, -1, 1, -1, 0, 1};
+    int[] x = {-1, -1, -1, 0, 0, 1, 1, 1}; //initializing an array of x positions to search around the previous character
+    int[] y = {-1, 0, 1, -1, 1, -1, 0, 1}; //initializing an array of y positions to search around the previous character
     
-    if (index > wordLen || !board[row][col].equals(Character.toString(word.charAt(index)))) {
-      return;
+    if (index > wordLen || !board[row][col].equals(Character.toString(word.charAt(index)))) { //checking if the current index is larger than the length of 
+      return;																				//the word or if the board at index (row, col) does not equal
+    }																						//the word at current index. If true, return and end search.
+    if (index == wordLen) { //base case: if index equals the length of the word, that means that the search has successfully found all characters in the 
+      found = true;		   //word on the board. 
+      return;			   //if true: Set found equals to true, return and end search.
     }
-    if (index == wordLen) {
-      found = true;
-      return;
-    }
-    for (int i=0; i < 8; i++) {
-      if (indexValid(board, (row + x[i]), (col + y[i]), prevRow, prevCol)) {
-        gridSearch(board, row + x[i], col + y[i], row, col, word, index+1, wordLen);
+    for (int i=0; i < 8; i++) { //for loop for searching in 8 directions around current character
+      if (indexValid(board, (row + x[i]), (col + y[i]), prevRow, prevCol)) { //if the index (row, col) is valid 
+        gridSearch(board, row + x[i], col + y[i], row, col, word, index+1, wordLen); //run recursive method gridSearch to search around current character
       }
     }
   }
@@ -694,7 +705,7 @@ public class frame extends JFrame implements ActionListener {
    */ 
   
   public static String [] readFromFile()  throws Exception  {
-    Scanner readFile = new Scanner(new File("wordlist.txt"),"UTF-8"); //declare scanner to read text file
+    Scanner readFile = new Scanner(new File("wordlist.txt")); //declare scanner to read text file
     ArrayList<String> wordArrayList = new ArrayList<String>(); //arraylist to store words from file
     while(readFile.hasNext()) {
       wordArrayList.add(readFile.nextLine());
