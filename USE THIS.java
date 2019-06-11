@@ -471,7 +471,7 @@ public class frame extends JFrame implements ActionListener {
     updateBoard(board);
     
     if (playerNum == 1) interval = onePlayerTimeInterval;
-    
+    flipCoin();
     startTimer();
     
   }
@@ -693,19 +693,9 @@ public class frame extends JFrame implements ActionListener {
     clip.loop(Clip.LOOP_CONTINUOUSLY); 
     clip.start();
   }
-  /*
-   public static void flipCoin () {
-   int flipCoin = (int)(Math.random()*2);
-   if(flipCoin == 0){
-   System.out.println(p1 + " you go first!");
-   }
-   if(flipCoin == 1){
-   System.out.println(p2 + " you go first!");
-   String temp = p1;
-   p1 = p2;
-   p2 = temp;
-   }
-   
-   }
-   */
+  
+  public static void flipCoin () {
+    playerTurn = (int)(Math.random()*2);;
+  }
+  
 }
