@@ -4,15 +4,15 @@
  * Assignment Title: Boggle
  * 
  */ 
-
 /*
  * TO DO:
- *  - comment code
- *  - clean up code
- *  - implement mandana's stuff?
- * EXTRAS
- * - implement welcome screen, and score board and analysis after each game
- * - Score Board & End Game Screen
+ * - comments (@rohan, please fill in the empty spots and also indexValid + gridSearch)
+ * bugs: 
+ *   -it says "b are u ready", but player turn is a (for first turn)
+ *   - timer stops at 1 instead of 0
+ *   - program crashes if they pass before timer starts
+ *   -getReady is messing with the code (if someone passes, the screen freezes for a few secs --> thread.sleep?)
+ * 
  * */
 
 //import needed libraries
@@ -42,18 +42,16 @@ public class frame extends JFrame implements ActionListener {
   static boolean found = false;
   static boolean gameRunning = true;
   static Scanner sc = new Scanner(System.in); 
-  static long remaining = 15000000000L;  //equivalent to 15s
   static JLabel[][] boardLabelGrid = new JLabel[5][5];
   static int playerNum; //number of players
   static String[] name; //names of players
   static int playerTurn = 0; //keep track of turn
   static int[] playerScore; //scores of players
   static int [] passCounter; //counts times passed
-  static boolean gamePause = false;
-  static int onePlayerTimeInterval;
+  static boolean gamePause = false; //keeps track of whether game is paused
+  static int onePlayerTimeInterval; //time limit for one player mode
   
-  
-  static int interval = 15; //for 15s timer 
+  static int interval = 15; //for 15s timer (2P mode)
   static Timer timer; //declare timer object
   
   //GUI Components
@@ -82,7 +80,7 @@ public class frame extends JFrame implements ActionListener {
   static Font font = new Font("Sans Serif", Font.BOLD, 20);
   static Font smallerFont = new Font("Sans Serif", Font.BOLD, 15);
   static Border labelBorder = BorderFactory.createEtchedBorder();
-  Border upperBorder = BorderFactory.createDashedBorder(Color.BLUE, 4, 3);  
+  Border upperBorder = BorderFactory.createDashedBorder(Color.BLUE, 4, 3); //a border
   
   //Bottom Buttons (options to randomize board, restart, exit, pass)
   JButton shakeBoard = new JButton("Randomize Board!");
@@ -328,15 +326,13 @@ public class frame extends JFrame implements ActionListener {
    * Method determines the winner by comparing users' score with score limit
    */
   public static void checkWon() {
-    if (playerScore[playerTurn] >= scoreToWin) {
-      timer.cancel();
+    if (playerScore[playerTurn] >= scoreToWin) { //if player has reached score limit
+      timer.cancel(); //cancel timer
       gamePause = true;
       Object[] resartGameValues = {"Yes", "No"};
-      Object selectedValue = JOptionPane.showInputDialog(null,
-                                                         "Congrats, " + name[playerTurn] +". You have finished the game by reaching " + scoreToWin + " points! \nWould you like to play again?", "Game Finished!",
-                                                         JOptionPane.INFORMATION_MESSAGE, null,
-                                                         resartGameValues, resartGameValues[1]);
+      Object selectedValue = JOptionPane.showInputDialog(null, "Congrats, " + name[playerTurn] +". You have finished the game by reaching " + scoreToWin + " points! \nWould you like to play again?", "Game Finished!",JOptionPane.INFORMATION_MESSAGE, null,resartGameValues, resartGameValues[1]);
       
+      //try-catch for input validation
       try {
         if (selectedValue.equals("Yes")) {
           resartGame();
@@ -348,6 +344,7 @@ public class frame extends JFrame implements ActionListener {
       }
     }
   }
+  
   /*
    * Method that calls appropriate methods when actions are performed
    */ 
@@ -356,16 +353,15 @@ public class frame extends JFrame implements ActionListener {
       String word = enterField.getText();
       validWordPanel.setVisible(true);
       
-      //if word is valid
-      if (validate(word, minWordLen, wordList, wordsEntered, board)) {
+      if (validate(word, minWordLen, wordList, wordsEntered, board)) { //call validate method to check if word is valid
         playerScore[playerTurn] += word.length();
         score.setText(Integer.toString(playerScore[playerTurn]));
-        wordsEntered.add(word);
+        wordsEntered.add(word); //add word to list of entered words
         validWord.setText("Word is VALID!");
         validWordPanel.setBorder(BorderFactory.createDashedBorder(Color.GREEN, 4, 3));
-        enterField.setText("");
+        enterField.setText(""); //clear text field
         
-        checkWon();
+        checkWon(); //checks if player has won
         
       } else {
         validWord.setText("Word is INVALID!");
@@ -373,8 +369,8 @@ public class frame extends JFrame implements ActionListener {
         
       }
     } else if (event.getSource() == shakeBoard) { //Pressed Randomize Board Button
-      randomizeBoard(board);
-      updateBoard(board);
+      randomizeBoard(board); //randomize the board
+      updateBoard(board); //update board in GUI
       System.out.println("Random Board");
       
     } else if (event.getSource() == exitGame) { //Pressed Exit Game Button
@@ -395,6 +391,7 @@ public class frame extends JFrame implements ActionListener {
       Object[] exitGameValues = {"Yes", "No"};
       Object selectedValue = JOptionPane.showInputDialog(null, exitMessage, "Exit Game",JOptionPane.INFORMATION_MESSAGE, null, exitGameValues, exitGameValues[1]);
       
+      //try-catch for input validation
       try {
         if (selectedValue.equals("Yes")) {
           System.exit(0);
@@ -409,6 +406,7 @@ public class frame extends JFrame implements ActionListener {
     } else if (event.getSource() == restartGame) {
       timer.cancel(); //cancel timer to make sure it doesn't run while they are trying to restart
       
+      //ensure that other player wants to restart as well
       String exitMessage = "";
       if (playerNum == 2) {
         if (playerTurn == 0) {
@@ -419,9 +417,11 @@ public class frame extends JFrame implements ActionListener {
       } else {
         exitMessage = "Are you sure you would like to restart?";
       }
-      //pause timer
+      
       Object[] resartGameValues = {"Yes", "No"};
       Object selectedValue = JOptionPane.showInputDialog(null, exitMessage, "Restart Game",JOptionPane.INFORMATION_MESSAGE, null, resartGameValues, resartGameValues[1]);
+      
+      //try-catch for input validation
       try {
         if (selectedValue.equals("Yes")) {
           resartGame();
@@ -432,9 +432,9 @@ public class frame extends JFrame implements ActionListener {
         startTimer();
         System.out.println(e.getMessage());
       }
-    } else if (event.getSource() == pass) {
-      passCounter[playerTurn]++;
-      if (playerTurn == 0) playerTurn = 1;
+    } else if (event.getSource() == pass) { //if player passes
+      passCounter[playerTurn]++; //add one to counter counting number of times passed
+      if (playerTurn == 0) playerTurn = 1; //switch to next player 
       else playerTurn = 0;
       score.setText(Integer.toString(playerScore[playerTurn]));
       
@@ -463,15 +463,19 @@ public class frame extends JFrame implements ActionListener {
     board = new String[BOARD_SIZE][BOARD_SIZE]; //declare a 2D array for the board
     wordList = readFromFile(); //wordList stores dictionary words by calling the method
     
-    randomizeBoard(board);
-    updateBoard(board);
+    randomizeBoard(board); //randomize the board
+    updateBoard(board); //update the board in the GUI
     
-    if (playerNum == 1) interval = onePlayerTimeInterval;
-    //if (playerNum==2) flipCoin();
+    if (playerNum == 1) interval = onePlayerTimeInterval; //if one player mode, set the timer to the time they inputted
+    if (playerNum==2)  playerTurn = (int)(Math.random()*2); // if 2 player, "flip a coin" (generate a random number from 0 to 1) to see who goes first
     getReady();
-    startTimer();
+    startTimer(); //start the timer
     
   }
+  
+  /*
+   * Method lets user know that their turn is starting and counts down
+   */ 
   public static void getReady () {
     introLabel.setText(name[playerTurn] +", your turn starts in...");
     timeDelays(1500);
@@ -483,6 +487,9 @@ public class frame extends JFrame implements ActionListener {
     timeDelays(1000);
     introLabel.setText("The Timer has Started!!");
   }
+  /*
+   * Method sets time delays which are used for countdown messages in getReady()
+   */ 
   public static void timeDelays (int time) { // method to add time delays between print statements.
     try {  
       Thread.sleep(time);
@@ -547,8 +554,8 @@ public class frame extends JFrame implements ActionListener {
    */
   public static void updateBoard(String[][] board) {
     gridPan.removeAll();
-    for (int i=0; i<boardLabelGrid.length; i++) {
-      for (int j=0; j<boardLabelGrid.length; j++) {
+    for (int i = 0; i < boardLabelGrid.length; i++) {
+      for (int j = 0; j< boardLabelGrid.length; j++) {
         boardLabelGrid[i][j] = new JLabel(board[i][j], JLabel.CENTER);
         boardLabelGrid[i][j].setBorder(labelBorder);
         boardLabelGrid[i][j].setFont(font);
@@ -706,9 +713,5 @@ public class frame extends JFrame implements ActionListener {
     clip.loop(Clip.LOOP_CONTINUOUSLY); 
     clip.start();
   }
-  /*
-   public static void flipCoin () {
-   playerTurn = (int)(Math.random()*2);;
-   }
-   */
+  
 }
