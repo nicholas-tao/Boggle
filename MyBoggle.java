@@ -14,7 +14,6 @@ import java.io.*;
 import javax.swing.*;
 import javax.sound.sampled.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Scanner;
 import java.util.Timer;
@@ -59,7 +58,7 @@ JPanel playerTurnPanel = new JPanel();//has the players name when it is 2 player
   static Font font = new Font("Sans Serif", Font.BOLD, 20);
   static Font biggerFont = new Font ("Sans Serif", Font.BOLD, 30);
   static Font smallerFont = new Font("Sans Serif", Font.BOLD, 15);
-	
+ 
   
   //declaring Components
   JButton enterButton = new JButton("Enter");
@@ -70,14 +69,14 @@ JPanel playerTurnPanel = new JPanel();//has the players name when it is 2 player
   JLabel scoreTitle = new JLabel("Your Score: ", JLabel.CENTER);
   static JLabel score = new JLabel("0", JLabel.CENTER); //displays player's score, changes as program progresses
   static JLabel validWord = new JLabel("Word is ", JLabel.CENTER); //indicates whether word is valid
-	 JLabel playerTurnTitle = new JLabel("Player Turn:", JLabel.CENTER);
+  JLabel playerTurnTitle = new JLabel("Player Turn:", JLabel.CENTER);
   static JLabel playerTurnLabel = new JLabel("", JLabel.CENTER);//shows the name of the player when it is their turn
-	
+ 
   //borders
   static Border labelBorder = BorderFactory.createEtchedBorder();
   Border upperBorder = BorderFactory.createDashedBorder(Color.BLUE, 4, 3); //a border
-	
-	
+ 
+ 
   //Bottom Buttons (options to randomize board, restart, exit, pass)
   JButton shakeBoard = new JButton("Randomize Board!");
   JButton restartGame = new JButton("Restart"); //switch text to play when game state is paused
@@ -97,7 +96,7 @@ JPanel playerTurnPanel = new JPanel();//has the players name when it is 2 player
     //do-while loop for input validation to get score to win from user
     do {
       String scoreToWinInput = JOptionPane.showInputDialog("Please choose a score to win");//getting the score limit
-      try {//try-CATCH VALIDATION	
+      try {//try-CATCH VALIDATION 
         scoreToWin = Integer.valueOf(scoreToWinInput); 
       } catch (Exception e) {
         JOptionPane.showMessageDialog(null, "You have to an appropriate value", "ERROR", JOptionPane.ERROR_MESSAGE);//ERROR MESSAGE
@@ -131,7 +130,7 @@ JPanel playerTurnPanel = new JPanel();//has the players name when it is 2 player
    */
   public frame() {
     //Intro Questions and Game Rules
-	  //setting a variable gameRules to all the rules
+   //setting a variable gameRules to all the rules
     String gameRules = "Welcome to Boggle. Here's how to play: \n\n You must find words on the board that that are:\n" + 
       " - Touching each other, either horizontally vertically, or diagonally\n" + 
       " - Not repeating the same letter in a single word\n" + 
@@ -146,8 +145,8 @@ JPanel playerTurnPanel = new JPanel();//has the players name when it is 2 player
       " - NOTE: For 2 player mode, if a player passes, the next player's turn starts IMMEDIATELY after the current player's turn. Be ready!";
     JOptionPane.showMessageDialog(null, gameRules, "Game Rules", JOptionPane.INFORMATION_MESSAGE);//printing gameRules in an info frame
    
-	  //asking for the number of players
-	  Object[] possibleValues = {"One", "Two"};//scroll down options
+   //asking for the number of players
+   Object[] possibleValues = {"One", "Two"};//scroll down options
     Object selectedValue = JOptionPane.showInputDialog(null,"How many players are there?", "Input",JOptionPane.INFORMATION_MESSAGE, null,possibleValues, possibleValues[0]);   
     
     if(selectedValue.equals("One")) playerNum=1; //indicates 1 player mode
@@ -316,7 +315,7 @@ JPanel playerTurnPanel = new JPanel();//has the players name when it is 2 player
     if (playerScore[playerTurn] >= scoreToWin) { //if player has reached score limit
       timer.cancel(); //cancel timer
       hasWon = true;
-	    //dialogue frame asking if they want to play again
+     //dialogue frame asking if they want to play again
       Object[] resartGameValues = {"Yes", "No"};//scroll down options
       Object selectedValue = JOptionPane.showInputDialog(null, "Congrats, " + name[playerTurn] +". You have finished the game by reaching " + scoreToWin + " points! \nWould you like to play again?", "Game Finished!",JOptionPane.INFORMATION_MESSAGE, null,resartGameValues, resartGameValues[1]);
       
@@ -328,7 +327,7 @@ JPanel playerTurnPanel = new JPanel();//has the players name when it is 2 player
           System.exit(0);// exiting the game if they didn't want to play again
         }
       } catch (Exception e) {
-	  JOptionPane.showMessageDialog(null, "Error Message: "+e.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);//ERROR MESSAGE
+   JOptionPane.showMessageDialog(null, "Error Message: "+e.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);//ERROR MESSAGE
       }//end of try catch
     }//end of if they won
   }//end of checkWon
@@ -355,11 +354,11 @@ JPanel playerTurnPanel = new JPanel();//has the players name when it is 2 player
         validWord.setText("Word is INVALID!");// setting the text inside validWordPanel
         validWordPanel.setBorder(BorderFactory.createDashedBorder(Color.RED, 4, 3));//adding red border around validWordPanel
       }//end of validating the inputted word and following actions
-	    
+     
     } else if (event.getSource() == shakeBoard) { //Pressed Randomize Board Button
       randomizeBoard(board); //randomize the board
       updateBoard(board); //update board in GUI
-	    introLabel.setText("Board Has Been Randomized");//informing the player the board has been randomized
+     introLabel.setText("Board Has Been Randomized");//informing the player the board has been randomized
       
     } else if (event.getSource() == exitGame) { //Pressed Exit Game Button
       timer.cancel();  //cancel timer to make sure it doesn't run while they are trying to exit
@@ -407,7 +406,7 @@ JPanel playerTurnPanel = new JPanel();//has the players name when it is 2 player
       }
       
       Object[] resartGameValues = {"Yes", "No"};//scroll down option
-	    //printing exit message
+     //printing exit message
       Object selectedValue = JOptionPane.showInputDialog(null, exitMessage, "Restart Game",JOptionPane.INFORMATION_MESSAGE, null, resartGameValues, resartGameValues[1]);
       
       //try-catch for input validation
@@ -491,53 +490,53 @@ JPanel playerTurnPanel = new JPanel();//has the players name when it is 2 player
    * The time interval is called by setTimerInterval method
    */ 
   public static void startTimer() {
-		 int delay = 1000;//delay of 1 second
-		 int period = 1000;
-		 timer = new Timer();
-		 timeRemaining.setText(Integer.toString(interval));//changing the timeRemaining Label
-		 timer.scheduleAtFixedRate(new TimerTask() {
-		     public void run() {
-		    	 	timeRemaining.setText(Integer.toString(setTimerInterval()));//changing the timeRemaining Label
-		     }
-		 }, delay, period);
-	  }
-	 
+   int delay = 1000;//delay of 1 second
+   int period = 1000;
+   timer = new Timer();
+   timeRemaining.setText(Integer.toString(interval));//changing the timeRemaining Label
+   timer.scheduleAtFixedRate(new TimerTask() {
+       public void run() {
+         timeRemaining.setText(Integer.toString(setTimerInterval()));//changing the timeRemaining Label
+       }
+   }, delay, period);
+   }
+  
   /*
    * Method sets the interval of a timer 
    */
   public static int setTimerInterval() {
-	    if (interval == 0 && playerNum == 2) { //once timer is finished and there are 2 players
-	    		if (playerTurn == 0) { playerTurn = 1; }//switching players
-	    		else { playerTurn = 0; }
-	    		playerTurnLabel.setText(name[playerTurn]);//changing the name to the other players
-	    		score.setText(Integer.toString(playerScore[playerTurn]));//output the players score
-	        timer.cancel();
-	        checkWon();//check to see if player won
-  			if (!hasWon) {//continue if they did not win
-  				interval = 16;
-  				startTimer();
-  			}
-		} else if (interval == 0 && playerNum == 1) {//if there is 1 player
-			if (playerScore[playerTurn] < scoreToWin) {
-				timer.cancel();//stop timer
-				hasWon = true;
-				Object[] resartGameValues = {"Yes", "No"};// scroll down options
-				//telling them that they lost and asking if they want to play again
-				Object selectedValue = JOptionPane.showInputDialog(null,"Sorry, " + name[playerTurn] +". You have lost! \nWould you like to play again?", "Game Over!", JOptionPane.INFORMATION_MESSAGE, null, resartGameValues, resartGameValues[1]);
-				try {
-					if (selectedValue.equals("Yes")) {
-					  resartGame();//restarting game
-					} else {
-					  System.exit(0);//exiting game
-					}
-				} catch (Exception e) {
-				  
+     if (interval == 0 && playerNum == 2) { //once timer is finished and there are 2 players
+       if (playerTurn == 0) { playerTurn = 1; }//switching players
+       else { playerTurn = 0; }
+       playerTurnLabel.setText(name[playerTurn]);//changing the name to the other players
+       score.setText(Integer.toString(playerScore[playerTurn]));//output the players score
+         timer.cancel();
+         checkWon();//check to see if player won
+     if (!hasWon) {//continue if they did not win
+      interval = 16;
+      startTimer();
+     }
+  } else if (interval == 0 && playerNum == 1) {//if there is 1 player
+   if (playerScore[playerTurn] < scoreToWin) {
+    timer.cancel();//stop timer
+    hasWon = true;
+    Object[] resartGameValues = {"Yes", "No"};// scroll down options
+    //telling them that they lost and asking if they want to play again
+    Object selectedValue = JOptionPane.showInputDialog(null,"Sorry, " + name[playerTurn] +". You have lost! \nWould you like to play again?", "Game Over!", JOptionPane.INFORMATION_MESSAGE, null, resartGameValues, resartGameValues[1]);
+    try {
+     if (selectedValue.equals("Yes")) {
+       resartGame();//restarting game
+     } else {
+       System.exit(0);//exiting game
+     }
+    } catch (Exception e) {
+      
         JOptionPane.showMessageDialog(null, "Error Message: "+e.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);//ERROR MESSAGE
-				}//end of try catch
-			}//end of if they lost
-		}//end of if its 1 player
-	    return --interval;
-	}//end of setTimerInterval method
+    }//end of try catch
+   }//end of if they lost
+  }//end of if its 1 player
+     return --interval;
+ }//end of setTimerInterval method
   /*
    * Method updates the board by removing everything and setting the border and font
    */
