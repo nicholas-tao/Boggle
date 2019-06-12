@@ -42,7 +42,7 @@ public class frame extends JFrame implements ActionListener {
   static boolean hasWon = false; //keeps track of whether game is paused
   static int onePlayerTimeInterval; //time limit for one player mode
   
-  static int interval = 16; //for 15s timer (2P mode), it is one second higher than 15 because the timer stops at 1s, so starting from 16 ensures a 15s timer
+  static int interval = 15; //for 15s timer (2P mode), it is one second higher than 15 because the timer stops at 1s, so starting from 16 ensures a 15s timer
   static Timer timer; //declare timer object
   
   //GUI Components
@@ -299,7 +299,7 @@ public class frame extends JFrame implements ActionListener {
     if (playerNum == 1) {
       playerScore[0] = 0;
       score.setText(Integer.toString(playerScore[0]));
-      interval = onePlayerTimeInterval+1;
+      interval = onePlayerTimeInterval;
       startTimer();
     } else {
       playerScore[0] = 0;
@@ -310,7 +310,7 @@ public class frame extends JFrame implements ActionListener {
       
       score.setText(Integer.toString(playerScore[playerTurn]));
       playerTurnLabel.setText(name[playerTurn]);
-      interval = 16;
+      interval = 15;
       startTimer();
     }
   }
@@ -433,7 +433,7 @@ public class frame extends JFrame implements ActionListener {
       
       //Resetting timer
       timer.cancel();
-      interval = 16;
+      interval = 15;
       startTimer();
       playerTurnLabel.setText(name[playerTurn]);
       if (passCounter[0] >=2 && passCounter[1] >= 2) { //both players have to pass twice to randomize the board
@@ -458,7 +458,7 @@ public class frame extends JFrame implements ActionListener {
     randomizeBoard(board); //randomize the board
     updateBoard(board); //update the board in the GUI
     
-    if (playerNum == 1) interval = onePlayerTimeInterval+1; //if one player mode, set the timer to the time they inputted
+    if (playerNum == 1) interval = onePlayerTimeInterval; //if one player mode, set the timer to the time they inputted
     if (playerNum==2)  playerTurn = (int)(Math.random()*2); // if 2 player, "flip a coin" (generate a random number from 0 to 1) to see who goes first
     getReady();
     startTimer(); //start the timer
@@ -495,53 +495,57 @@ public class frame extends JFrame implements ActionListener {
    * The time interval is called by setTimerInterval method
    */ 
   public static void startTimer() {
-    int delay = 1000;
-    int period = 1000;
-    timer = new Timer();
-    timeRemaining.setText(Integer.toString(interval-1));
-    timer.scheduleAtFixedRate(new TimerTask() {
-      public void run() {
-        timeRemaining.setText(Integer.toString(setTimerInterval()-1));
-      }
-    }, delay, period);
-  }
+		 int delay = 1000;
+		 int period = 1000;
+		 timer = new Timer();
+		 timeRemaining.setText(Integer.toString(interval));
+		 timer.scheduleAtFixedRate(new TimerTask() {
+		     public void run() {
+		    	 	//System.out.println(setTimerInterval());
+		    	 	timeRemaining.setText(Integer.toString(setTimerInterval()));
+		     }
+		 }, delay, period);
+	  }
+	  
   
   /*
    * Method sets the interval of a timer 
    */
   public static int setTimerInterval() {
-    if (interval == 1 && playerNum == 2) { //once timer is finished
-      if (playerTurn == 0) { playerTurn = 1; }
-      else { playerTurn = 0; }
-      playerTurnLabel.setText(name[playerTurn]);
-      score.setText(Integer.toString(playerScore[playerTurn]));
-      timer.cancel();
-      checkWon();
-      if (!hasWon) {
-        getReady();
-        interval = 16;
-        startTimer();
-      }
-    } else if (interval == 1 && playerNum == 1) {
-      if (playerScore[playerTurn] < scoreToWin) {
-        timer.cancel();
-        hasWon = true;
-        Object[] resartGameValues = {"Yes", "No"};
-        Object selectedValue = JOptionPane.showInputDialog(null,"Sorry, " + name[playerTurn] +". You have lost! \nWould you like to play again?", "Game Over!", JOptionPane.INFORMATION_MESSAGE, null, resartGameValues, resartGameValues[1]);
-        
-        try {
-          if (selectedValue.equals("Yes")) {
-            resartGame();
-          } else {
-            System.exit(0);
-          }
-        } catch (Exception e) {
-          System.out.println(e.getMessage());
-        }
-      }
-    }
-    return --interval;
-  }
+	    if (interval == 1 && playerNum == 2) { //once timer is finished
+	    		if (playerTurn == 0) { playerTurn = 1; }
+	    		else { playerTurn = 0; }
+	    		playerTurnLabel.setText(name[playerTurn]);
+	    		score.setText(Integer.toString(playerScore[playerTurn]));
+	        timer.cancel();
+	        checkWon();
+  			if (!hasWon) {
+  				interval = 16;
+  				startTimer();
+  			}
+		} else if (interval == 1 && playerNum == 1) {
+			if (playerScore[playerTurn] < scoreToWin) {
+				timer.cancel();
+				hasWon = true;
+				Object[] resartGameValues = {"Yes", "No"};
+				Object selectedValue = JOptionPane.showInputDialog(null,
+			                                                       "Sorry, " + name[playerTurn] +". You have lost! \nWould you like to play again?", "Game Over!",
+			                                                       JOptionPane.INFORMATION_MESSAGE, null,
+			                                                       resartGameValues, resartGameValues[1]);
+			  
+				try {
+					if (selectedValue.equals("Yes")) {
+					  resartGame();
+					} else {
+					  System.exit(0);
+					}
+				} catch (Exception e) {
+				  System.out.println(e.getMessage());
+				}
+			}
+		}
+	    return --interval;
+	}
   /*
    * Method updates the board by removing everything and setting the border and font
    */
