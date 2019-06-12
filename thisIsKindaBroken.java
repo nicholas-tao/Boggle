@@ -69,6 +69,7 @@ public class frame extends JFrame implements ActionListener {
   static JLabel introLabel = new JLabel("Welcome To Boggle", SwingConstants.CENTER); //labels
   static JTextField enterField = new JTextField ("", 30);// blank text field
   static Font font = new Font("Sans Serif", Font.BOLD, 20);
+  static Font biggerFont = new Font ("Sans Serif", Font.BOLD, 30);
   static Font smallerFont = new Font("Sans Serif", Font.BOLD, 15);
   static Border labelBorder = BorderFactory.createEtchedBorder();
   Border upperBorder = BorderFactory.createDashedBorder(Color.BLUE, 4, 3); //a border
@@ -550,7 +551,7 @@ public class frame extends JFrame implements ActionListener {
       for (int j = 0; j< boardLabelGrid.length; j++) {
         boardLabelGrid[i][j] = new JLabel(board[i][j], JLabel.CENTER);
         boardLabelGrid[i][j].setBorder(labelBorder);
-        boardLabelGrid[i][j].setFont(font);
+        boardLabelGrid[i][j].setFont(biggerFont);
         gridPan.add(boardLabelGrid[i][j]);
       }
     }
