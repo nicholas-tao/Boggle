@@ -84,7 +84,6 @@ JPanel playerTurnPanel = new JPanel();//has the players name when it is 2 player
   JButton exitGame = new JButton("Exit");
   JButton pass = new JButton("Pass");
   
-
   /*
    * Method sets up the game and prompts the user to enter game setup questions regarding minimum word length and score to win
    */
@@ -290,7 +289,7 @@ JPanel playerTurnPanel = new JPanel();//has the players name when it is 2 player
     validWordPanel.setVisible(false);//still invisible
     wordsEntered.removeAll(wordsEntered);//removing all past history
     
-    hasWon = false;
+    hasWon = false; //set hasWon to false
     if (playerNum == 1) {
       playerScore[0] = 0;//initializing score to 0
       score.setText(Integer.toString(playerScore[0]));//changing the score label
@@ -414,7 +413,7 @@ JPanel playerTurnPanel = new JPanel();//has the players name when it is 2 player
       //try-catch for input validation
       try {
         if (selectedValue.equals("Yes")) {
-          resartGame();//restrat the game 
+          resartGame();//restart the game 
         } else {
           startTimer();//start the timer for another turn
         }
@@ -491,20 +490,18 @@ JPanel playerTurnPanel = new JPanel();//has the players name when it is 2 player
    * Method starts a timer and runs for certain time interval.
    * The time interval is called by setTimerInterval method
    */ 
-  public static void startTimer() {//starts timer
+  public static void startTimer() {
 		 int delay = 1000;//delay of 1 second
 		 int period = 1000;
 		 timer = new Timer();
 		 timeRemaining.setText(Integer.toString(interval));//changing the timeRemaining Label
 		 timer.scheduleAtFixedRate(new TimerTask() {
 		     public void run() {
-		    	 	//System.out.println(setTimerInterval());
 		    	 	timeRemaining.setText(Integer.toString(setTimerInterval()));//changing the timeRemaining Label
 		     }
 		 }, delay, period);
 	  }
-	  
-  
+	 
   /*
    * Method sets the interval of a timer 
    */
@@ -520,7 +517,7 @@ JPanel playerTurnPanel = new JPanel();//has the players name when it is 2 player
   				interval = 16;
   				startTimer();
   			}
-		} else if (interval == 0 && playerNum == 1) {//if thwere is 1 player
+		} else if (interval == 0 && playerNum == 1) {//if there is 1 player
 			if (playerScore[playerTurn] < scoreToWin) {
 				timer.cancel();//stop timer
 				hasWon = true;
@@ -569,19 +566,19 @@ JPanel playerTurnPanel = new JPanel();//has the players name when it is 2 player
     if (checkDict(wordList, wordLowerCase, min, max) > -1 && checkLength(word, wordLen) && checkAdjacent(board, word) && checkDuplicateWord(wordsEntered, word)) {//checking the dictionary for the word, checking if the length matches the minLength, checking if the letters are touching each other and they are on the board
       return true;//they met all the conditions
     }
-    return false;//they did not meet ALL conditions
+    return false; //they did not meet ALL conditions for word to be valid
   }
   
   /*
    * Method checks if the word is in the dictionary by using recursive binary search
    * if the word is in the dictionary, then method returns the index of the word; otherwise, it returns -1
    */
-  public static int checkDict(String[] wordList, String word, int min, int max) {//checks to see if the word is in an English Dictionary
+  public static int checkDict(String[] wordList, String word, int min, int max) {
     int middle = (max + min)/2;
     if (max < min) {
       return -1;
     }
-    if (word.compareTo(wordList[middle])==0) {//recursive search
+    if (word.compareTo(wordList[middle])==0) { 
       return middle;
     } else if (word.compareTo(wordList[middle]) > 0) {
       return checkDict(wordList, word, middle+1, max);
@@ -597,9 +594,9 @@ JPanel playerTurnPanel = new JPanel();//has the players name when it is 2 player
    */ 
   public static boolean checkLength(String word, int wordLen) {//checks to see if the letter length is longer than the minLength
     if (word.length() >= wordLen) {
-      return true;//it is
+      return true; //return true if word meets length requirement
     }
-    return false;// it isnt
+    return false;// if word is too short
   }
   /*
    * Method returns true if word entered has not been entered before. Otherwise, it 
@@ -694,9 +691,9 @@ JPanel playerTurnPanel = new JPanel();//has the players name when it is 2 player
     Scanner readFile = new Scanner(new File("wordlist.txt"),"UTF-8"); //declare scanner to read text file
     ArrayList<String> wordArrayList = new ArrayList<String>(); //arraylist to store words from file
     while(readFile.hasNext()) {
-      wordArrayList.add(readFile.nextLine());
+      wordArrayList.add(readFile.nextLine()); //read line in file
     }
-    readFile.close();
+    readFile.close(); //close scanner
     return wordArrayList.toArray(new String [wordArrayList.size()]); //convert arraylist to array
   }
   /*
