@@ -4,16 +4,6 @@
  * Assignment Title: Boggle
  * 
  */ 
-/*
- * TO DO:
- * - comments
- * bugs: 
- *   -it says "b are u ready", but player turn is a (for first turn)
- *   - program crashes if they pass before timer starts
- *   -getReady is messing with the code (if someone passes, the screen freezes for a few secs --> thread.sleep?)
- * 	- cancel on input num players screen
- * - cancel input on min word length screen
- * */
 
 //import needed libraries
 import javax.swing.border.Border;
@@ -30,7 +20,7 @@ import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class frameTest extends JFrame implements ActionListener { 
+public class frame extends JFrame implements ActionListener { 
   
   //declare global variables
   static ArrayList<String> wordsEntered = new ArrayList<String>();
@@ -52,7 +42,7 @@ public class frameTest extends JFrame implements ActionListener {
   static boolean hasWon = false; //keeps track of whether game is paused
   static int onePlayerTimeInterval; //time limit for one player mode
   
-  static int interval = 15; //for 15s timer (2P mode)
+  static int interval = 16; //for 15s timer (2P mode), it is one second higher than 15 because the timer stops at 1s, so starting from 16 ensures a 15s timer
   static Timer timer; //declare timer object
   
   //GUI Components
@@ -147,7 +137,7 @@ public class frameTest extends JFrame implements ActionListener {
   /*
    * Constructor method for the frame of the game
    */
-  public frameTest() {
+  public frame() {
     //Intro Questions and Game Rules
     String gameRules = "Welcome to Boggle. Here's how to play: \n\n You must find words on the board that that are:\n" + 
       " - Touching each other, either horizontally vertically, or diagonally\n" + 
@@ -159,7 +149,8 @@ public class frameTest extends JFrame implements ActionListener {
       "The players are able to restart and exit\nthe game at any given time. They can also continue playing another round after the game has finished.\n" + 
       "\nIn the end, the player to pass the score limit first wins the game and there are a few things to note:\n" + 
       " - A word can’t be repeated in the same round\n" + 
-      " - A word can’t be counted twice even if it has 2 different meanings\n";
+      " - A word can’t be counted twice even if it has 2 different meanings\n" +
+      " - NOTE: For 2 player mode, if a player passes, the next player's turn starts IMMEDIATELY after the current player's turn. Be ready!";
     JOptionPane.showMessageDialog(null, gameRules, "Game Rules", JOptionPane.INFORMATION_MESSAGE);
     Object[] possibleValues = {"One", "Two"};
     Object selectedValue = JOptionPane.showInputDialog(null,"How many players are there?", "Input",JOptionPane.INFORMATION_MESSAGE, null,possibleValues, possibleValues[0]);   
@@ -172,11 +163,9 @@ public class frameTest extends JFrame implements ActionListener {
     setupQuestions(); //call method to ask setup questions
     
     //getting the name of players
-    for(int i=0; i<playerNum; i++) { //getting the name of players
-    		
-        name[i] = JOptionPane.showInputDialog(null, "Enter name of Player "+(i+1)+".", "Enter name");
-      }
-    
+    for(int i = 0; i < playerNum; i++) { 
+      name[i] = JOptionPane.showInputDialog(null, "Enter name of Player "+(i+1)+".", "Enter name");
+    }
     
     //MARK: Frame Setup
     setTitle("Boggle");
@@ -309,7 +298,7 @@ public class frameTest extends JFrame implements ActionListener {
     if (playerNum == 1) {
       playerScore[0] = 0;
       score.setText(Integer.toString(playerScore[0]));
-      interval = onePlayerTimeInterval;
+      interval = onePlayerTimeInterval+1;
       startTimer();
     } else {
       playerScore[0] = 0;
@@ -320,7 +309,7 @@ public class frameTest extends JFrame implements ActionListener {
       
       score.setText(Integer.toString(playerScore[playerTurn]));
       playerTurnLabel.setText(name[playerTurn]);
-      interval = 15;
+      interval = 16;
       startTimer();
     }
   }
@@ -443,8 +432,7 @@ public class frameTest extends JFrame implements ActionListener {
       
       //Resetting timer
       timer.cancel();
-      getReady();
-      interval = 15;
+      interval = 16;
       startTimer();
       playerTurnLabel.setText(name[playerTurn]);
       if (passCounter[0] >=2 && passCounter[1] >= 2) { //both players have to pass twice to randomize the board
@@ -469,11 +457,8 @@ public class frameTest extends JFrame implements ActionListener {
     randomizeBoard(board); //randomize the board
     updateBoard(board); //update the board in the GUI
     
-    if (playerNum == 1) interval = onePlayerTimeInterval; //if one player mode, set the timer to the time they inputted
+    if (playerNum == 1) interval = onePlayerTimeInterval+1; //if one player mode, set the timer to the time they inputted
     if (playerNum==2)  playerTurn = (int)(Math.random()*2); // if 2 player, "flip a coin" (generate a random number from 0 to 1) to see who goes first
-    
-    System.out.println("Name: " + name[0] + ", " + name[1]);
-
     getReady();
     startTimer(); //start the timer
     
@@ -484,6 +469,7 @@ public class frameTest extends JFrame implements ActionListener {
    */ 
   public static void getReady () {
     introLabel.setText(name[playerTurn] +", your turn starts in...");
+    playerTurnLabel.setText(name[playerTurn]);
     timeDelays(1500);
     introLabel.setText("3....");
     timeDelays(1000);
@@ -500,6 +486,7 @@ public class frameTest extends JFrame implements ActionListener {
     try {  
       Thread.sleep(time);
     } catch (Exception e) {}
+    //timeDelays(1000);
   } // end of time delays
   
   /*
@@ -510,10 +497,10 @@ public class frameTest extends JFrame implements ActionListener {
     int delay = 1000;
     int period = 1000;
     timer = new Timer();
-    timeRemaining.setText(Integer.toString(interval));
+    timeRemaining.setText(Integer.toString(interval-1));
     timer.scheduleAtFixedRate(new TimerTask() {
       public void run() {
-        timeRemaining.setText(Integer.toString(setTimerInterval()));
+        timeRemaining.setText(Integer.toString(setTimerInterval()-1));
       }
     }, delay, period);
   }
@@ -522,7 +509,7 @@ public class frameTest extends JFrame implements ActionListener {
    * Method sets the interval of a timer 
    */
   public static int setTimerInterval() {
-    if (interval == 0 && playerNum == 2) { //once timer is finished
+    if (interval == 1 && playerNum == 2) { //once timer is finished
       if (playerTurn == 0) { playerTurn = 1; }
       else { playerTurn = 0; }
       playerTurnLabel.setText(name[playerTurn]);
@@ -534,7 +521,7 @@ public class frameTest extends JFrame implements ActionListener {
         interval = 16;
         startTimer();
       }
-    } else if (interval == 0 && playerNum == 1) {
+    } else if (interval == 1 && playerNum == 1) {
       if (playerScore[playerTurn] < scoreToWin) {
         timer.cancel();
         hasWon = true;
@@ -614,7 +601,6 @@ public class frameTest extends JFrame implements ActionListener {
     }
     return false;
   }
-  
   /*
    * Method returns true if word entered has not been entered before. Otherwise, it 
    * returns false.
@@ -652,9 +638,9 @@ public class frameTest extends JFrame implements ActionListener {
   public static boolean indexValid(String[][] board, int row, int col, int prevRow, int prevCol) {
     int len = board.length; //initlizing variable len to be the length of the board (grid of characters
     if ((row >= 0 && col >= 0 && row < len && col < len) && !(prevRow == row && prevCol == col)) { //checking if the index (row, col) is valid
-      return true;																				// if valid, return true
+      return true;
     } else {
-      return false;																				//otherwise, return false
+      return false;
     }
   }
   /*
@@ -666,11 +652,11 @@ public class frameTest extends JFrame implements ActionListener {
     int[] y = {-1, 0, 1, -1, 1, -1, 0, 1}; //initializing an array of y positions to search around the previous character
     
     if (index > wordLen || !board[row][col].equals(Character.toString(word.charAt(index)))) { //checking if the current index is larger than the length of 
-      return;																				//the word or if the board at index (row, col) does not equal
-    }																						//the word at current index. If true, return and end search.
+      return;                    //the word or if the board at index (row, col) does not equal
+    }                      //the word at current index. If true, return and end search.
     if (index == wordLen) { //base case: if index equals the length of the word, that means that the search has successfully found all characters in the 
-      found = true;		   //word on the board. 
-      return;			   //if true: Set found equals to true, return and end search.
+      found = true;     //word on the board. 
+      return;      //if true: Set found equals to true, return and end search.
     }
     for (int i=0; i < 8; i++) { //for loop for searching in 8 directions around current character
       if (indexValid(board, (row + x[i]), (col + y[i]), prevRow, prevCol)) { //if the index (row, col) is valid 
@@ -705,7 +691,7 @@ public class frameTest extends JFrame implements ActionListener {
    */ 
   
   public static String [] readFromFile()  throws Exception  {
-    Scanner readFile = new Scanner(new File("wordlist.txt")); //declare scanner to read text file
+    Scanner readFile = new Scanner(new File("wordlist.txt"),"UTF-8"); //declare scanner to read text file
     ArrayList<String> wordArrayList = new ArrayList<String>(); //arraylist to store words from file
     while(readFile.hasNext()) {
       wordArrayList.add(readFile.nextLine());
