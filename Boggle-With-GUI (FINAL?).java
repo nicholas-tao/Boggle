@@ -50,7 +50,7 @@ public class frame extends JFrame implements ActionListener {
   JPanel bottomPanel = new JPanel(); //the panel where we have the enter textfield andenter button
   JPanel infoPanel = new JPanel();///topmost panel
   JPanel bottomButtons = new JPanel();//the bottom-most panel
-  static JPanel validWordPanel = new JPanel();//bellow bottomPanel
+  static JPanel validWordPanel = new JPanel();//below bottomPanel
   JPanel timeRemainingPanel = new JPanel();//has the remaining time label
   JPanel scorePanel = new JPanel();//has the score labels
 JPanel playerTurnPanel = new JPanel();//has the players name when it is 2 players
@@ -139,7 +139,7 @@ JPanel playerTurnPanel = new JPanel();//has the players name when it is 2 player
       " - Have more than or the same number of letters as the minimum word length\n" + 
       " - Exist in the English dictionary \n\n" + 
       "You must find all the words you can within the time limit and you will gain points by how many letters are in\nthe words you find with each letter earning you 1 point. " + 
-      "If two payers are playing and they both pass twice or if\nit is one player and the player passes, the board will be shaken up. " + 
+      "If two players are playing and they both pass twice or if\nit is one player and the player passes, the board will be shaken up. " + 
       "The players are able to restart and exit\nthe game at any given time. They can also continue playing another round after the game has finished.\n" + 
       "\nIn the end, the player to pass the score limit first wins the game and there are a few things to note:\n" + 
       " - A word can’t be repeated in the same round\n" + 
@@ -148,7 +148,7 @@ JPanel playerTurnPanel = new JPanel();//has the players name when it is 2 player
     JOptionPane.showMessageDialog(null, gameRules, "Game Rules", JOptionPane.INFORMATION_MESSAGE);//printing gameRules in an info frame
    
 	  //asking for the number of players
-	  Object[] possibleValues = {"One", "Two"};//scroll down ptions
+	  Object[] possibleValues = {"One", "Two"};//scroll down options
     Object selectedValue = JOptionPane.showInputDialog(null,"How many players are there?", "Input",JOptionPane.INFORMATION_MESSAGE, null,possibleValues, possibleValues[0]);   
     
     if(selectedValue.equals("One")) playerNum=1; //indicates 1 player mode
@@ -209,7 +209,7 @@ JPanel playerTurnPanel = new JPanel();//has the players name when it is 2 player
     exitGame.setPreferredSize(new Dimension(165, 25));
     
     bottomButtons.add(restartGame);//adding to panel
-    restartGame.addActionListener(this);//adding to actionLitsener
+    restartGame.addActionListener(this);//adding to actionListsener
     
     bottomButtons.add(exitGame);
     exitGame.addActionListener(this);
@@ -237,21 +237,21 @@ JPanel playerTurnPanel = new JPanel();//has the players name when it is 2 player
       infoPanel.add(playerTurnPanel);//adding panel to panel
       
       pass.setPreferredSize(new Dimension(165, 25));
-      pass.addActionListener(this);//adding to actionLitsener
+      pass.addActionListener(this);//adding to actionListsener
       
       bottomButtons.add(pass);
       playerScore = new int[2];//if its 2 players, we have an array
       passCounter = new int [2];
-      playerTurnLabel.setText(name[playerTurn]);// setting the label to the player who's turn it is
+      playerTurnLabel.setText(name[playerTurn]);// setting the label to the player whose turn it is
       
     } else { //components for 1 player mode
       timeRemainingPanel.setPreferredSize(new Dimension(350, 65));
       scorePanel.setPreferredSize(new Dimension(350, 65));
       shakeBoard.setPreferredSize(new Dimension(165, 25));
-      shakeBoard.addActionListener(this); //button actionLitsener
+      shakeBoard.addActionListener(this); //button actionListsener
       
       bottomButtons.add(shakeBoard);//adding to the panel
-      playerScore = new int[1]; //an array with length of 1 since thwere is only 1 player
+      playerScore = new int[1]; //an array with length of 1 since there is only 1 player
     }
     
     //add panels to panels
@@ -265,7 +265,7 @@ JPanel playerTurnPanel = new JPanel();//has the players name when it is 2 player
     gridPan.setPreferredSize(new Dimension(600, 300));//he board size
     
     //adding panels to totalPan
-    totalPan.add(infoPanel);//adding all the segmets together
+    totalPan.add(infoPanel);//adding all the segments together
     totalPan.add(gridPan);
     totalPan.add(bottomPanel);
     totalPan.add(bottomButtons); //adding panels
@@ -274,19 +274,19 @@ JPanel playerTurnPanel = new JPanel();//has the players name when it is 2 player
     
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     
-    add(totalPan);//adding the panwel to the frame
+    add(totalPan);//adding the panel to the frame
     setVisible(true); //setting frame to be visible
     setLocationRelativeTo(null); //centering the frame
   }
   
   /*
-   * Method restarts the game by calling appropriate methods and reseting variables
+   * Method restarts the game by calling appropriate methods and ressetting variables
    */
   public static void resartGame() {
     setupQuestions();//ask the elementary questions
     randomizeBoard(board);//randomize die position and die face
-    updateBoard(board);//tranfer it to show on GUI
-    enterField.setText("");//emphtying the textfield
+    updateBoard(board);//transfer it to show on GUI
+    enterField.setText("");//emptying the textfield
     validWordPanel.setVisible(false);//still invisible
     wordsEntered.removeAll(wordsEntered);//removing all past history
     
@@ -304,7 +304,7 @@ JPanel playerTurnPanel = new JPanel();//has the players name when it is 2 player
       passCounter[1] = 0;
       
       score.setText(Integer.toString(playerScore[playerTurn]));//changing the score label
-      playerTurnLabel.setText(name[playerTurn]);//setting the name of the player whos's turn it is
+      playerTurnLabel.setText(name[playerTurn]);//setting the name of the player whose turn it is
       interval = 15;
       startTimer();//starting timer
     }
@@ -326,7 +326,7 @@ JPanel playerTurnPanel = new JPanel();//has the players name when it is 2 player
         if (selectedValue.equals("Yes")) {
           resartGame();//restarting the game if they want to play again
         } else {
-          System.exit(0);// exiting the game if they didnt want to play again
+          System.exit(0);// exiting the game if they didn't want to play again
         }
       } catch (Exception e) {
 	  JOptionPane.showMessageDialog(null, "Error Message: "+e.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);//ERROR MESSAGE
@@ -339,11 +339,11 @@ JPanel playerTurnPanel = new JPanel();//has the players name when it is 2 player
    */ 
   public void actionPerformed(ActionEvent event) { //GUI ACTION RESPONSES
     if (event.getSource() == enterButton) { //Pressed Enter Button
-      String word = enterField.getText();//gets the inputed word
+      String word = enterField.getText();//gets the inputted word
       validWordPanel.setVisible(true);//sets the validWordPanel to be visible
       
       if (validate(word, minWordLen, wordList, wordsEntered, board)) { //call validate method to check if word is valid
-        playerScore[playerTurn] += word.length();//dding the score, 1 point for every letter in a valid word
+        playerScore[playerTurn] += word.length();//adding the score, 1 point for every letter in a valid word
         score.setText(Integer.toString(playerScore[playerTurn]));
         wordsEntered.add(word); //add word to list of entered words
         validWord.setText("Word is VALID!");// setting the text inside validWordPanel
@@ -516,7 +516,7 @@ JPanel playerTurnPanel = new JPanel();//has the players name when it is 2 player
 	    		score.setText(Integer.toString(playerScore[playerTurn]));//output the players score
 	        timer.cancel();
 	        checkWon();//check to see if player won
-  			if (!hasWon) {//continue if they dint win
+  			if (!hasWon) {//continue if they did not win
   				interval = 16;
   				startTimer();
   			}
@@ -566,7 +566,7 @@ JPanel playerTurnPanel = new JPanel();//has the players name when it is 2 player
     int min = 0;
     int max = wordList.length-1;
     String wordLowerCase = word.toLowerCase();//changing it all to lower case
-    if (checkDict(wordList, wordLowerCase, min, max) > -1 && checkLength(word, wordLen) && checkAdjacent(board, word) && checkDuplicateWord(wordsEntered, word)) {//checking the dictionary for the word, checking if the length matchwes the minLength, checking if the letters are touching each other and they are on the board
+    if (checkDict(wordList, wordLowerCase, min, max) > -1 && checkLength(word, wordLen) && checkAdjacent(board, word) && checkDuplicateWord(wordsEntered, word)) {//checking the dictionary for the word, checking if the length matches the minLength, checking if the letters are touching each other and they are on the board
       return true;//they met all the conditions
     }
     return false;//they did not meet ALL conditions
