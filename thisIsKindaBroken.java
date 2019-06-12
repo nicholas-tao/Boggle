@@ -512,7 +512,7 @@ public class frame extends JFrame implements ActionListener {
    * Method sets the interval of a timer 
    */
   public static int setTimerInterval() {
-	    if (interval == 1 && playerNum == 2) { //once timer is finished
+	    if (interval == 0 && playerNum == 2) { //once timer is finished
 	    		if (playerTurn == 0) { playerTurn = 1; }
 	    		else { playerTurn = 0; }
 	    		playerTurnLabel.setText(name[playerTurn]);
@@ -523,7 +523,7 @@ public class frame extends JFrame implements ActionListener {
   				interval = 16;
   				startTimer();
   			}
-		} else if (interval == 1 && playerNum == 1) {
+		} else if (interval == 0 && playerNum == 1) {
 			if (playerScore[playerTurn] < scoreToWin) {
 				timer.cancel();
 				hasWon = true;
