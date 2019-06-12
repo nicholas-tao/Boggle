@@ -117,7 +117,7 @@ JPanel playerTurnPanel = new JPanel();//has the players name when it is 2 player
         try {
           onePlayerTimeInterval = Integer.valueOf(input); 
         } catch (Exception e) {
-          JOptionPane.showMessageDialog(null, "You have enter an appropriate value", "ERROR", JOptionPane.ERROR_MESSAGE);//ERROR MESSAGE
+          JOptionPane.showMessageDialog(null, "You have to enter an appropriate value", "ERROR", JOptionPane.ERROR_MESSAGE);//ERROR MESSAGE
           continue;
         }
         if (onePlayerTimeInterval < 5) {
